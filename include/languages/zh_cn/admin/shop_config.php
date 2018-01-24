@@ -71,7 +71,6 @@ $_LANG['cfg_name']['can_invoice'] = '能否开发票';
 $_LANG['cfg_name']['user_notice'] = '用户中心公告';
 $_LANG['cfg_name']['shop_notice'] = '商店公告';
 $_LANG['cfg_name']['shop_reg_closed'] = '是否关闭注册';
-$_LANG['cfg_name']['shop_url'] = 'PC端网址';
 $_LANG['cfg_name']['send_mail_on'] = '是否开启自动发送邮件';
 $_LANG['cfg_name']['auto_generate_gallery'] = '上传商品是否自动生成相册图';
 $_LANG['cfg_name']['retain_original_img'] = '上传商品时是否保留原图';
@@ -139,8 +138,8 @@ $_LANG['cfg_name']['show_attr_in_cart'] = '购物车里是否显示商品属性'
 $_LANG['test_mail_title'] = '测试邮件';
 $_LANG['cfg_name']['email_content']  = '您好！这是一封检测邮件服务器设置的测试邮件。收到此邮件，意味着您的邮件服务器设置正确！您可以进行其它邮件发送的操作了！';
 $_LANG['cfg_name']['sms'] = '短信设置';
-$_LANG['cfg_name']['sms_ecmoban_user'] = '短信接口用户名';
-$_LANG['cfg_name']['sms_ecmoban_password'] = '短信接口密码';
+$_LANG['cfg_name']['sms_ecmoban_user'] = '短信宝用户名';
+$_LANG['cfg_name']['sms_ecmoban_password'] = '短信宝密码';
 $_LANG['cfg_name']['sms_shop_mobile'] = '商家的手机号码';
 $_LANG['cfg_name']['sms_order_placed'] = '客户下订单时是否给商家发短信';
 $_LANG['cfg_name']['sms_order_payed'] = '客户付款时是否给商家发短信';
@@ -202,7 +201,7 @@ $_LANG['cfg_desc']['cart_confirm'] = '允许您设置用户点击“加入购物
 $_LANG['cfg_desc']['use_how_oos'] = '使用缺货处理时前台订单确认页面允许用户选择缺货时处理方法。';
 $_LANG['cfg_desc']['send_service_email'] = '网店信息中的客服邮件地址不为空时，该选项有效。';
 $_LANG['cfg_desc']['send_mail_on'] = '启用该选项登录后台时，会自动发送邮件队列中尚未发送的邮件';
-$_LANG['cfg_desc']['sms_shop_mobile'] = '请先注册手机短信服务再填写手机号码';
+$_LANG['cfg_desc']['sms_shop_mobile'] = '还没有短信宝账号，<a href="http://www.smsbao.com" target="_blank" style="color:#1B9AD5;">立即注册</a>';
 $_LANG['cfg_desc']['send_verify_email'] = '“是否开启会员邮件验证”设为开启时才可使用此功能';
 
 $_LANG['cfg_range']['cart_confirm'][1] = '提示用户，点击“确定”进购物车';

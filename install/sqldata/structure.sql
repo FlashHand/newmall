@@ -1475,6 +1475,14 @@ CREATE TABLE IF NOT EXISTS `ecs_service_type` (
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
+--
+-- 售后类型 ecs_service_type
+--
+INSERT INTO `ecs_service_type` (`service_id`, `service_name`, `service_desc`, `received_days`, `unreceived_days`, `is_show`,`sort_order`,`service_type`) VALUES  
+(1,'退货','已收到货，需要退还已收到的货物1',7,8,1,9,1),
+(3,'换货','对已收到的货物不满意，联系卖家协商换货',7,10,1,3,3);
+
+
 
 --
 -- 表的结构 `ecs_sessions`

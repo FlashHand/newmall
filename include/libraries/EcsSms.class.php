@@ -25,11 +25,11 @@ class EcsSms {
         }
 
         /* 获取API URL */
-        $sms_url = "http://106.ihuyi.com/webservice/sms.php?method=Submit";
+        $sms_url = "http://api.smsbao.com/sms";
 
         if (count($contents) > 1) {
             foreach ($contents as $key => $val) {
-                $post_data = "account=" . $this->sms_name . "&password=" . md5($this->sms_password) . "&mobile=" . $val['phones'] . "&content=" . rawurlencode($val['content']); //密码可以使用明文密码或使用32位MD5加密
+                $post_data = "u=" . $this->sms_name . "&p=" . md5($this->sms_password) . "&m=" . $val['phones'] . "&c=【" .C('shop_name').'】'. rawurlencode($val['content']); //密码可以使用明文密码或使用32位MD5加密
 
                 //$get = $this->Post($post_data, $sms_url);
                 $get = Http::doPost($sms_url, $post_data);
@@ -37,17 +37,17 @@ class EcsSms {
                 sleep(1);
             }
         } else {
-            $post_data = "account=" . $this->sms_name . "&password=" . md5($this->sms_password) . "&mobile=" . $contents[0]['phones'] . "&content=" . rawurlencode($contents[0]['content']); //密码可以使用明文密码或使用32位MD5加密
+            $post_data = "u=" . $this->sms_name . "&p=" . md5($this->sms_password) . "&m=" . $contents[0]['phones'] . "&c=【" .C('shop_name').'】'. rawurlencode($contents[0]['content']); //密码可以使用明文密码或使用32位MD5加密
             //$get = $this->Post($post_data, $sms_url);
             $get = Http::doPost($sms_url, $post_data);
             $gets = $this->xml_to_array($get);
         }
 
         //print_r($gets);exit; //开启调试模式
-        if ($gets['SubmitResult']['code'] == 2) {
+        if ($get== '0') {
             return true;
         } else {
-            $sms_error = $gets['SubmitResult']['msg'];
+            $sms_error = $get;
             //$this->logResult($sms_error);
             return $sms_error;
         }
@@ -153,7 +153,7 @@ class EcsSms {
 
     // 检测手机号码是否正确
     function is_moblie($moblie) {
-        return preg_match("/^13[0-9]{9}|15[012356789][0-9]{8}|18[0-9]{9}|14[579][0-9]{8}|17[0-9]{9}$/", $moblie);
+        return preg_match("/^0?1((3|7|8)[0-9]|5[0-35-9]|4[57])\d{8}$/", $moblie);
     }
 
     //打印日志

@@ -55,7 +55,7 @@
 			<a href="{:url('store/index', array('drp_id'=> $this->_var['sale']['id']))}">
 				<ul class="int-nav-box-1 my-new-m padding-all shop-b">
 					<li>
-						<label class="cate-shop-box"><i class="iconfont icon-dianpu"></i><span>我的微店</span></label>
+						<label class="cate-shop-box"><i class="iconfont icon-dianpu"></i><span>我的首页</span></label>
 						<span class="t-jiantou f-r"><i class="iconfont icon-jiantou1 tf-180 jian-top"></i></span>
 					</li>
 				</ul>

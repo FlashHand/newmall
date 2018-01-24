@@ -33,7 +33,25 @@ $_LANG['label_transform_points'] = '积分兑换';
 $_LANG['label_logout'] = '退出';
 $_LANG['user_service'] = '客户服务';
 $_LANG['user_service_list'] = '消息中心';
-$_LANG['user_history'] = '浏览记录';
+$_LANG['user_dndzhbd8'] = '电脑端账号绑定';
+$_LANG['user_shezhi8'] = '设置';
+$_LANG['user_shoucang8'] = '收藏';
+$_LANG['user_xiaoxi8'] = '消息';
+$_LANG['user_medingdan8'] = '我的订单';
+$_LANG['user_dingdan8'] = '全部订单';
+$_LANG['user_daifk8'] = '待付款';
+$_LANG['user_daish8'] = '待收货';
+$_LANG['user_daipj8'] = '待评价';
+$_LANG['user_tuihuan8'] = '退/换货';
+$_LANG['user_wdqb8'] = '我的钱包';
+$_LANG['user_zjgl8'] = '资金管理';
+$_LANG['user_yue8'] = '余额';
+$_LANG['user_hongbao8'] = '红包';
+$_LANG['user_jifen8'] = '积分';
+$_LANG['user_kefu8'] = '客服服务';
+$_LANG['user_fenxiang8'] = '我的分享';
+$_LANG['user_weidian8'] = '我的微店';
+$_LANG['user_qingkong8'] = '清空';
 
 /* 会员余额(预付款) */
 $_LANG['add_surplus_log'] = '帐户明细';

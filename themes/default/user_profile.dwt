@@ -22,11 +22,11 @@
 		<ul>
 			<li class="dis-box s-xian-box s-user-top-1">
 				<h3 class="profile-left-name text-all-span my-u-title-size">{$lang.username}：</h3>
-				<div class="box-flex t-goods1  onelist-hidden"> <input name="email" type="text" readonly="readonly" placeholder="{$info.username}" value="{$info.username}" style="padding-right:10px;margin-right:10px;width:250px"></div>
+				<div class="box-flex t-goods1  onelist-hidden"> <input name="email" type="text" readonly="readonly" placeholder="{$info.username}" value="{$info.username}"></div>
 			</li>
 			<li class="dis-box s-xian-box s-user-top-1">
 				<h3 class="profile-left-name text-all-span my-u-title-size">{$lang.email}：</h3>
-				<div class="box-flex t-goods1 onelist-hidden "> <input name="email" type="text" placeholder="{$lang.no_emaill}" value="{$profile.email}" style="padding-right:10px;margin-right:10px;width:250px"></div>
+				<div class="box-flex t-goods1 onelist-hidden "> <input name="email" type="text" placeholder="{$lang.no_emaill}" value="{$profile.email}"></div>
 			</li>
 			{foreach from=$extend_info_list item=field}
 			<!-- {if $field.id eq 6} -->
@@ -45,7 +45,7 @@
 			<!-- {else} -->
 			<li class="dis-box s-xian-box s-user-top-1">
 				<h3 class="profile-left-name text-all-span my-u-title-size">{$field.reg_field_name}:</h3>
-				<div class="box-flex t-goods1  onelist-hidden"> <input name="extend_field{$field.id}" type="text" value="{$field.content}" placeholder="{$field.reg_field_name}" style="padding-right:10px;margin-right:10px;width:250px"></div>
+				<div class="box-flex t-goods1  onelist-hidden"> <input name="extend_field{$field.id}" type="text" value="{$field.content}" placeholder="{$field.reg_field_name}"></div>
 			</li>
 			<!-- {/if} -->
 			{/foreach}

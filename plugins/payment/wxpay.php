@@ -43,11 +43,11 @@ class wxpay
         if (!isset($openid) || empty($openid)) {
             return false;
         }
-        //$order['order_amount'] = 0.01;
+
         // 设置必填参数
         // 根目录url
         $this->setParameter("openid", "$openid"); // 商品描述
-        $this->setParameter("body", '演示数据测试订单号：'.$order['order_sn']); // 商品描述
+        $this->setParameter("body", $order['order_sn']); // 商品描述
         $this->setParameter("out_trade_no", $order['order_sn'] . 'A' . ($order['order_amount'] * 100) . 'B' . $order['log_id']); // 商户订单号
         $this->setParameter("total_fee", $order['order_amount'] * 100); // 总金额
         $this->setParameter("notify_url", return_url(basename(__FILE__, '.php'), true)); // 通知地址
@@ -62,7 +62,7 @@ class wxpay
         function jsApiCall(){WeixinJSBridge.invoke("getBrandWCPayRequest",' . $jsApiParameters . ',function(res){if(res.err_msg == "get_brand_wcpay_request:ok"){location.href="' . return_url(basename(__FILE__, '.php'), false, array('status' => 1)) . '"}else{location.href="' . return_url(basename(__FILE__, '.php'), false, array('status' => 0)) . '"}});}function callpay(){if (typeof WeixinJSBridge == "undefined"){if( document.addEventListener ){document.addEventListener("WeixinJSBridgeReady", jsApiCall, false);}else if (document.attachEvent){document.attachEvent("WeixinJSBridgeReady", jsApiCall);document.attachEvent("onWeixinJSBridgeReady", jsApiCall);}}else{jsApiCall();}}
             </script>';
         
-        $button = '<div style="text-align:center"><button class="btn btn-info ect-btn-info ect-colorf ect-bg" style="background-color:#44b549;" type="button" onclick="javascript:if(confirm(\'订单商品支付\')){callpay()}">立即付款</button></div>' . $js;
+        $button = '<div style="text-align:center"><button class="btn-info ect-btn-info" style="background-color:#44b549;" type="button" onclick="callpay()">立即付款</button></div>' . $js;
         
         return $button;
     }

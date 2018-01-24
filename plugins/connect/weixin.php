@@ -108,8 +108,6 @@ class weixin {
         if (!empty($code)) {
             $token = $this->weObj->getOauthAccessToken();
             $userinfo = $this->weObj->getOauthUserinfo($token['access_token'], $token['openid']);
-			//var_dump($userinfo);
-			//die;
             $_SESSION['wechat_user'] = empty($userinfo) ? array() : $userinfo;
             if (!empty($userinfo)) {
                 //公众号信息
@@ -199,13 +197,9 @@ class weixin {
             // 获取用户所在分组ID
             $group_id = $weObj->getUserGroup($userinfo['openid']);
             $group_id = $group_id ? $group_id : 0;
-			$info = $this->weObj->getUserInfo($userinfo['openid']);
-            //var_dump($info);
-			//die;
-			
+
             $data1['wechat_id'] = $wechat_id;
-            //$data1['subscribe'] = 0;
-			$data1['subscribe'] = $info['subscribe'];//2017-4-10 关注公众号
+            $data1['subscribe'] = 0;
             $data1['openid'] = $userinfo['openid'];
             $data1['nickname'] = $userinfo['nickname'];
             $data1['sex'] = $userinfo['sex'];

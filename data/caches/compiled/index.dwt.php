@@ -110,7 +110,28 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 			<a href="javascript:;" style="text-align:center" class="get_more"></a>
 		</ul>
 	</section>
-	
+	<div class="n-footer-box">
+		<ul class="n-footer-minbox">
+			<li>
+				<a href="http://m.ecmoban.com/index.php?m=touch&amp;c=index&amp;a=download">
+					<div class="n-footer-img-box"><i class="iconfont icon-qunfengshangjiazhushouapperweimafuben is-ban-fize"></i></div>
+					<p class="footer-tit1">客户端</p>
+				</a>
+			</li>
+			<li>
+				<a href="index.html">
+					<div class="n-footer-img-box"><i class="iconfont icon-shoujiyanzheng is-ban-fize active"></i></div>
+					<p class="footer-tit">触屏版</p>
+				</a>
+			</li>
+			<li>
+				<a href="http://www.ecmoban.com/?pc">
+					<div class="n-footer-img-box"><i class="iconfont icon-pc is-ban-fize jian-top-2"></i></div>
+					<p class="footer-tit1">电脑版</p>
+				</a>
+			</li>
+		</ul>
+	</div>
 </div>
 
 <div class="filter-top" id="scrollUp">
@@ -121,7 +142,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 				<a href="<?php echo url('index/index');?>" class="box-flex nav-list active">
 					<i class="nav-box i-home"></i><span>首页</span>
 				</a>
-				<a href="/ectwfx/?m=default&amp;c=category&amp;a=top_all&amp;u=0" class="box-flex nav-list">
+				<a href="<?php echo url('category/top_all');?>" class="box-flex nav-list">
 					<i class="nav-box i-cate"></i><span>分类</span>
 				</a>
 				

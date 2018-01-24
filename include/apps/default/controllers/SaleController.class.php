@@ -299,7 +299,6 @@ class SaleController extends CommonController {
      * 推广二维码
      */
     public function spread(){
-		
         $id = I('u') ? I('u') : $this->user_id;
         if(!isset($_GET['u'])){
             redirect(url('sale/spread',array('u'=>$id)));
@@ -310,7 +309,6 @@ class SaleController extends CommonController {
         if(!file_exists($filename)){
             mkdir($filename);
         }
-		
         $bg_img = ROOT_PATH.'data/attached/drp/tg-bg.png';//背景图
         $ew_img = ROOT_PATH.'data/attached/drp/tg-ewm-'.$id.'.png';//二维码
         $dp_img = ROOT_PATH.'data/attached/drp/tg-dp-'.$id.'.png';//店铺二维码
@@ -344,14 +342,12 @@ class SaleController extends CommonController {
                 }
                 Image::thumb($ew_img, $ew_img,'','330','330'); // 将图片重新设置大小
             }
-			
             // 获取微信头像
             if(class_exists('WechatController')){
                 if (method_exists('WechatController', 'get_avatar')) {
                     $info = call_user_func(array('WechatController', 'get_avatar'), $id);
                 }
             }
-			
             if($info['avatar']){
                 $info['avatar']=preg_replace('/https/','http',$info['avatar'],1);
                 $thumb = Http::doGet($info['avatar']);
@@ -359,18 +355,17 @@ class SaleController extends CommonController {
 
                 Image::thumb($wx_img, $wx_img,'','100','100'); // 将图片重新设置大小
             }
-           
+
             // 生成海报图片
             $img = file_get_contents($bg_img);
             file_put_contents($dp_img,$img);
             chmod(ROOT_PATH.$dp_img, 0777);
-			
 
             // 添加二维码水印
             if(file_get_contents($ew_img)){
-                //Image::water($dp_img,$ew_img,12);
+                Image::water($dp_img,$ew_img,12);
             }
-         
+
             // 添加微信头像水印
             if($info['avatar']){
                 Image::water($dp_img,$wx_img,13);
@@ -378,7 +373,6 @@ class SaleController extends CommonController {
         }
 		// 查询推广用户信息
         $shopuser = $this->model->table('users')->where(array('user_id'=> $id))->find();
-		
         if(empty($shopuser)){
             redirect(url('sale/index'));
         }else{
@@ -396,7 +390,7 @@ class SaleController extends CommonController {
             );
         }
         // 销售二维码
-        $this->assign('mobile_qr', 'data/attached/drp/tg-ewm-'.$id.'.png');
+        $this->assign('mobile_qr', 'data/attached/drp/tg-dp-'.$id.'.png');
         $this->assign('info', $info);
         $this->assign('title',L('spread'));
         $this->display('sale_spread.dwt');

@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `ecs_wechat_extend` (
   `command` varchar(255) DEFAULT NULL COMMENT '扩展词',
   `config` text COMMENT '配置信息',
   `type` varchar(20) DEFAULT NULL,
-  `enable` int(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否安装，1为已安装，0未安装',
+  `enable` int(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否安装，1为已安装，0未安装',
   `author` varchar(100) DEFAULT NULL,
   `website` varchar(100) DEFAULT NULL,
   `wechat_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '公众号id',

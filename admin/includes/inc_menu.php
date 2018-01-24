@@ -26,7 +26,7 @@ $modules['01_menu_system']['admin_list']             = 'privilege.php?act=list';
 //$modules['01_menu_system']['agency_list']            = 'agency.php?act=list';
 //$modules['01_menu_system']['suppliers_list']         = 'suppliers.php?act=list';
 //$modules['01_menu_system']['shop_authorized']             = 'license.php?act=list_edit';
-//$modules['01_menu_system']['shop_authorized']             = '../index.php?m=admin&a=license';
+$modules['01_menu_system']['shop_authorized']             = '../index.php?m=admin&a=license';
 
 // 商品
 $modules['02_menu_goods']['01_goods_list']       = 'goods.php?act=list'; // 商品列表
@@ -163,8 +163,7 @@ $modules['11_menu_rec']['02_drp_users']                       = 'drp.php?act=use
 $modules['11_menu_rec']['03_drp']                             = 'drp.php?act=list';
 $modules['11_menu_rec']['04_order_list']                      = 'drp.php?act=order_list';
 $modules['11_menu_rec']['05_affiliate']                       = 'affiliate.php?act=list';
-//$modules['11_menu_rec']['06_affiliate_ck']                    = 'affiliate_ck.php?act=list';
-$modules['11_menu_rec']['06_affiliate_ck']                    = 'drp.php?act=order_list&is_separate=1';
+$modules['11_menu_rec']['06_affiliate_ck']                    = 'affiliate_ck.php?act=list';
 $modules['11_menu_rec']['07_ranking']                         = 'drp.php?act=ranking';
 $modules['11_menu_rec']['08_drp_log']                         = 'drp.php?act=drp_log';
 /*DRP_END*/

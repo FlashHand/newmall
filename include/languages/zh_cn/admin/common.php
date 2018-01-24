@@ -254,7 +254,7 @@ $_LANG['suppliers_list'] = '供货商列表';
 
 /* 系统设置 */
 $_LANG['01_shop_config'] = '商店设置';
-//$_LANG['shop_authorized'] = '授权证书';
+$_LANG['shop_authorized'] = '授权证书';
 $_LANG['shp_webcollect'] = '网罗天下';
 $_LANG['02_payment_list'] = '支付方式';
 $_LANG['03_shipping_list'] = '配送方式';
@@ -384,7 +384,7 @@ $_LANG['06_admin_role'] = '角色管理';
 $_LANG['07_admin_logs'] = '管理员日志';
 $_LANG['08_agency_list'] = '办事处列表';
 $_LANG['09_suppliers_list'] = '供货商列表';
-//$_LANG['10_shop_authorized'] = '授权证书';
+$_LANG['10_shop_authorized'] = '授权证书';
 
 // 商品
 

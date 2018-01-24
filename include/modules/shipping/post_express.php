@@ -31,10 +31,10 @@ if (isset($set_modules) && $set_modules == TRUE)
     $modules[$i]['cod']     = false;
 
     /* 插件的作者 */
-    $modules[$i]['author']  = 'ECTouch Team';
+    $modules[$i]['author']  = '阅海网络科技';
 
     /* 插件作者的官方网站 */
-    $modules[$i]['website'] = 'http://www.ectouch.cn';
+    $modules[$i]['website'] = 'http://www.yuehi.net';
 
     /* 配送接口需要的参数 */
     $modules[$i]['configure'] = array(

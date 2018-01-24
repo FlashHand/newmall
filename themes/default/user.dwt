@@ -25,7 +25,7 @@
 						{if !$isbind}
 						<div class="g-s-i-title-a">
 							<a href="{:url('user/bind')}">
-								<p class="user-reg-top color-whie f-03">电脑端账号绑定 </p>
+								<p class="user-reg-top color-whie f-03">{$lang.user_dndzhbd8} </p>
 							</a>
 						</div>
 						{/if}
@@ -34,7 +34,7 @@
 						<a href="{:url('user/profile')}">
 							<div class="user-right-box">
 								<i class="iconfont icon-shezhi is-shezi my-user-right-cont" style="display:block;"></i>
-								<p class="my-user-right-cont"><span class="my-t-remark color-whie">设置</span></p>
+								<p class="my-user-right-cont"><span class="my-t-remark color-whie">{$lang.user_shezhi8}</span></p>
 							</div>
 						</a>
 						<a href="{:url('user/msg_list')}">
@@ -51,11 +51,11 @@
 			<div class="user-nav-box n-g-s-i-title-1 dis-box text-center">
 				<a href="{:url('user/collection_list')}" class="box-flex">
 					<h4 class="color-whie ellipsis-one"><!--{if $list.goods_nums neq ''}--> {$list.goods_nums}<!--{else}-->0<!--{/if}--></h4>
-					<p class="color-whie t-remark3">收藏</p>
+					<p class="color-whie t-remark3">{$lang.user_shoucang8}</p>
 				</a>
 				<a href="{:url('user/msg_list')}" class="box-flex">
 					<h4 class="color-whie ellipsis-one"><!--{if $list.msg_list neq ''}--> {$list.msg_list}<!--{else}-->0<!--{/if}--></h4>
-					<p class="color-whie t-remark3">消息</p>
+					<p class="color-whie t-remark3">{$lang.user_xiaoxi8}</p>
 				</a>
 			</div>
 		</div>
@@ -63,8 +63,8 @@
 	<section class="b-color-f my-nav-box m-top10">
 		<a href="{:url('user/order_list')}">
 			<div class="dis-box padding-all my-bottom">
-				<h3 class="box-flex text-all-span my-u-title-size"><i class="iconfont icon-quanbudingdan is-user-size t-first"></i>我的订单</h3>
-				<div class="box-flex t-goods1 text-right onelist-hidden jian-top">全部订单</div>
+				<h3 class="box-flex text-all-span my-u-title-size"><i class="iconfont icon-quanbudingdan is-user-size t-first"></i>{$lang.user_medingdan8}</h3>
+				<div class="box-flex t-goods1 text-right onelist-hidden jian-top">{$lang.user_dingdan8}</div>
 				<span class="t-jiantou"><i class="iconfont icon-jiantou tf-180 jian-top"></i></span>
 			</div>
 		</a>
@@ -72,7 +72,7 @@
 			<a href="{:url('user/not_pay_order_list')}" class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><i class="iconfont icon-daifukuan my-img-size"></i></h4>
-					<p class="t-remark3">待付款</p>
+					<p class="t-remark3">{$lang.user_daifk8}</p>
 					<div class="user-list-num">
 						<!--{if $list.not_pays neq ''}-->{$list.not_pays}
 						<!--{else}-->0
@@ -83,7 +83,7 @@
 			<a href="{:url('user/not_shoushuo')}" class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><i class="iconfont icon-daifahuo my-img-size"></i></h4>
-					<p class="t-remark3">待收货</p>
+					<p class="t-remark3">{$lang.user_daish8}</p>
 					<div class="user-list-num">
 						<!--{if $list.not_shouhuos neq ''}-->{$list.not_shouhuos}
 						<!--{else}-->0
@@ -94,7 +94,7 @@
 			<a href="{:url('user/order_comment')}" class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><i class="iconfont icon-daipingjia my-img-size"></i></h4>
-					<p class="t-remark3">待评价</p>
+					<p class="t-remark3">{$lang.user_daipj8}</p>
 					<div class="user-list-num">
 						<!--{if $list.not_comment neq ''}-->{$list.not_comment}
 						<!--{else}-->0
@@ -105,7 +105,7 @@
 			<a href="{:url('user/aftermarket_list')}" class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><i class="iconfont icon-p-return my-img-size"></i></h4>
-					<p class="t-remark3">退/换货</p>
+					<p class="t-remark3">{$lang.user_tuihuan8}</p>
 				</li>
 			</a>
 		</ul>
@@ -113,8 +113,8 @@
 	<section class="m-top10 my-nav-box b-color-f">
 		<a href="{:url('user/account_detail')};">
 			<div class="dis-box padding-all my-bottom">
-				<h3 class="box-flex text-all-span my-u-title-size"><i class="iconfont icon-qianbao is-user-size my-qianbao-color"></i>我的钱包</h3>
-				<div class="box-flex t-goods1 text-right onelist-hidden jian-top">资金管理</div>
+				<h3 class="box-flex text-all-span my-u-title-size"><i class="iconfont icon-qianbao is-user-size my-qianbao-color"></i>{$lang.user_wdqb8}</h3>
+				<div class="box-flex t-goods1 text-right onelist-hidden jian-top">{$lang.user_zjgl8}</div>
 				<span class="t-jiantou"><i class="iconfont icon-jiantou tf-180 jian-top"></i></span>
 			</div>
 		</a>
@@ -122,19 +122,19 @@
 			<div  class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><!--{if $list.user_money neq ''}--> {$list.user_money}<!--{else}-->0<!--{/if}--></h4>
-					<p class="t-remark3">余额</p>
+					<p class="t-remark3">{$lang.user_yue8}</p>
 				</li>
 			</div>
 			<a href="{:url('user/bonus')}" class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><!--{if $list.bonus neq ''}--> {$list.bonus}<!--{else}-->0<!--{/if}--></h4>
-					<p class="t-remark3">红包</p>
+					<p class="t-remark3">{$lang.user_hongbao8}</p>
 				</li>
 			</a>
 			<div  class="box-flex">
 				<li>
 					<h4 class="ellipsis-one"><!--{if $list.user_points neq ''}--> {$list.user_points}<!--{else}-->0<!--{/if}--></h4>
-					<p class="t-remark3">积分</p>
+					<p class="t-remark3">{$lang.user_jifen8}</p>
 				</li>
 			</div>
 		</ul>
@@ -143,16 +143,16 @@
 		<div class="box text-c b-color-f dis-box">
 			<a href="{:url('user/service')}" class="box-flex">
 				<i class="iconfont icon-kefu"></i>
-				<p class="f-03 col-6">客服服务</p>
+				<p class="f-03 col-6">{$lang.user_kefu8}</p>
 			</a>
 			<!-- <a href="{:url('user/share')}" class="box-flex">
 				<i class="iconfont icon-fenxiang"></i>
-				<p class="f-03 col-6">我的分享</p>
+				<p class="f-03 col-6">{$lang.user_fenxiang8}</p>
 			</a> -->
 			<!--/*DRP_START*/-->
 			<a href="{:url('store/check_store')}" class="box-flex">
 				<i class="iconfont icon-dianpu"></i>
-				<p class="f-03 col-6">我的微店</p>
+				<p class="f-03 col-6">{$lang.user_weidian8}</p>
 			</a>
 			<!--/*DRP_END*/-->
 		</div>
@@ -162,7 +162,7 @@
 	<section class="m-top10 my-nav-box">
 		<div class="dis-box padding-all b-color-f">
 			<h3 class="box-flex text-all-span my-u-title-size"><i class="iconfont icon-shijian is-user-size my-shijian-color"></i>{$lang.user_history}</h3>
-			<span class="jian-top n-shanchutupian del"><i class="iconfont icon-xiao10 is-xiao10 jian-top"></i><span class="q-title jian-top">清空</span>
+			<span class="jian-top n-shanchutupian del"><i class="iconfont icon-xiao10 is-xiao10 jian-top"></i><span class="q-title jian-top">{$lang.user_qingkong8}</span>
 		</div>
 		<section class="goods-shop-pic m-top1px of-hidden padding-all b-color-f">
 			<div style="cursor: grab;" class="g-s-p-con product-one-list1 of-hidden scrollbar-none j-g-s-p-con swiper-container-horizontal">
