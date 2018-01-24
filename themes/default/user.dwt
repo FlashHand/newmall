@@ -149,12 +149,6 @@
 				<i class="iconfont icon-fenxiang"></i>
 				<p class="f-03 col-6">{$lang.user_fenxiang8}</p>
 			</a> -->
-			<!--/*DRP_START*/-->
-			<a href="{:url('store/check_store')}" class="box-flex">
-				<i class="iconfont icon-dianpu"></i>
-				<p class="f-03 col-6">{$lang.user_weidian8}</p>
-			</a>
-			<!--/*DRP_END*/-->
 		</div>
 	</footer>
 
