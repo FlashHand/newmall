@@ -44,7 +44,7 @@
 
 <div class="index-main comWidth" >
 <div class="share-div">
-    <Img src="__TPL__/sale/images/share-index.png"></Img>
+    <Img src="http://7xshxa.com1.z0.glb.clouddn.com/dsh-qrcode.jpg"></Img>
 </div>
 
 <div class="ect-index-header">
@@ -116,7 +116,7 @@
                 <a href="javascript:;" class="box-flex nav-list j-search-input ">
                     <i class="nav-box i-search"></i><span>搜索</span>
                 </a>
-                
+
                 <a href="{:url('flow/cart')}" class="box-flex position-rel nav-list">
                     <i class="nav-box i-flow"></i><span>购物车</span>
                 </a>
