@@ -13,7 +13,7 @@
  * $Id: lib_main.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-if (!defined('IN_ECS'))
+if (!defined('IN_ECTOUCH'))
 {
     die('Hacking attempt');
 }
@@ -312,14 +312,9 @@ function create_html_editor($input_name, $input_value = '')
 {
     global $smarty;
 
-    $editor = new FCKeditor($input_name);
-    $editor->BasePath   = '../includes/fckeditor/';
-    $editor->ToolbarSet = 'Normal';
-    $editor->Width      = '100%';
-    $editor->Height     = '320';
-    $editor->Value      = $input_value;
-    $FCKeditor = $editor->CreateHtml();
-    $smarty->assign('FCKeditor', $FCKeditor);
+    $FCKeditor = '<input type="hidden" id="'.$input_name.'" name="'.$input_name.'" value="'.htmlspecialchars($input_value).'" />
+    <iframe id="'.$input_name.'_frame" src="../plugins/editor/editor.php?item='.$input_name.'" width="642" height="482" frameborder="0" scrolling="no"></iframe>';
+    $smarty->assign('fckeditor', $FCKeditor);
 }
 
 /**
@@ -541,7 +536,7 @@ function get_charset_list()
  */
 function make_json_response($content='', $error="0", $message='', $append=array())
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
 
     $json = new JSON;
 

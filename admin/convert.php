@@ -13,7 +13,7 @@
  * $Id: convert.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -30,7 +30,7 @@ if ($_REQUEST['act'] == 'main')
     for ($i = 0; $i < count($modules); $i++)
     {
         $code = $modules[$i]['code'];
-        $lang_file = ROOT_PATH.'languages/' . $_CFG['lang'] . '/convert/' . $code . '.php';
+        $lang_file = BASE_PATH.'languages/' . $_CFG['lang'] . '/convert/' . $code . '.php';
         if (file_exists($lang_file))
         {
             include_once($lang_file);
@@ -69,13 +69,13 @@ elseif ($_REQUEST['act'] == 'check')
     check_authz_json('convert');
 
     /* 取得参数 */
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 //    $_POST['JSON'] = '{"host":"localhost","db":"shopex","user":"root","pass":"123456","prefix":"sdb_","code":"shopex48","path":"../shopex","charset":"UTF8"}';
     $config = $json->decode($_POST['JSON']);
 
     /* 测试连接数据库 */
-    $sdb = new cls_mysql($config->host, $config->user, $config->pass, $config->db);
+    $sdb = new mysql($config->host, $config->user, $config->pass, $config->db);
 
     /* 检查必需的表是否存在 */
     $sprefix = $config->prefix;
@@ -126,7 +126,7 @@ elseif ($_REQUEST['act'] == 'check')
     $to_dir_list = array(
         ROOT_PATH . IMAGE_DIR . '/upload/',
         $img_dir,
-        ROOT_PATH . DATA_DIR . '/afficheimg/',
+        ROOT_PATH . DATA_DIR . '/attached/afficheimg/',
         ROOT_PATH . 'cert/'
     );
 
@@ -148,7 +148,7 @@ elseif ($_REQUEST['act'] == 'check')
     $_SESSION['convert_config'] = $config;
 
     /* 包含插件语言文件 */
-    include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $config->code . '.php');
+    include_once(BASE_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $config->code . '.php');
 
     /* 取得第一步操作 */
     $step = $convert->next_step('');
@@ -175,15 +175,15 @@ elseif ($_REQUEST['act'] == 'process')
     /* 连接原数据库 */
     $config = $_SESSION['convert_config'];
 
-    $sdb = new cls_mysql($config->host, $config->user, $config->pass, $config->db);
+    $sdb = new mysql($config->host, $config->user, $config->pass, $config->db);
     $sdb->set_mysql_charset($config->charset);
 
     /* 创建插件对象 */
-    include_once(ROOT_PATH . 'includes/modules/convert/' . $config->code . '.php');
+    include_once(BASE_PATH . 'include/modules/convert/' . $config->code . '.php');
     $convert = new $config->code($sdb, $config->prefix, $config->path, $config->charset);
 
     /* 包含插件语言文件 */
-    include_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $config->code . '.php');
+    include_once(BASE_PATH . 'languages/' . $_CFG['lang'] . '/convert/' . $config->code . '.php');
 
     /* 执行步骤 */
     $result = $convert->process($step);

@@ -13,12 +13,12 @@
  * $Id: goods.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
-include_once(ROOT_PATH . '/includes/cls_image.php');
-$image = new cls_image($_CFG['bgcolor']);
+// include_once(ROOT_PATH . '/includes/cls_image.php');
+$image = new image($_CFG['bgcolor']);
 $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
 
 /*------------------------------------------------------ */
@@ -104,7 +104,7 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
 
 elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'copy')
 {
-    include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
+    // include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
 
     $is_add = $_REQUEST['act'] == 'add'; // 添加还是编辑的标识
     $is_copy = $_REQUEST['act'] == 'copy'; //是否复制
@@ -167,6 +167,11 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             'other_cat'     => array(), // 扩展分类
             'goods_type'    => 0,       // 商品类型
             'shop_price'    => 0,
+            'virtual_sales'  => 0,
+            /*DRP_START*/
+            'touch_sale'    => 0,
+            'touch_fencheng'    => 0,
+            /*DRP_END*/
             'promote_price' => 0,
             'market_price'  => 0,
             'integral'      => 0,
@@ -176,8 +181,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             'promote_end_date'   => local_date('Y-m-d', local_strtotime('+1 month')),
             'goods_weight'  => 0,
             'give_integral' => -1,
-            'rank_integral' => -1,
-			'fencheng'=>0
+            'rank_integral' => -1
         );
 
         if ($code != '')
@@ -236,8 +240,13 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
                 'other_cat'     => array(), // 扩展分类
                 'goods_type'    => 0,       // 商品类型
                 'shop_price'    => 0,
+                /*DRP_START*/
+                'touch_sale'    => 0,
+                'touch_fencheng'    => 0,
+                /*DRP_END*/
                 'promote_price' => 0,
                 'market_price'  => 0,
+                'virtual_sales'  => 0,
                 'integral'      => 0,
                 'goods_number'  => 1,
                 'warn_number'   => 1,
@@ -245,8 +254,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
                 'promote_end_date'   => local_date('Y-m-d', gmstr2tome('+1 month')),
                 'goods_weight'  => 0,
                 'give_integral' => -1,
-                'rank_integral' => -1,
-				'fencheng' => 0
+                'rank_integral' => -1
             );
         }
 
@@ -379,6 +387,12 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
         $link_goods_list    = get_linked_goods($goods['goods_id']); // 关联商品
         $group_goods_list   = get_group_goods($goods['goods_id']); // 配件
         $goods_article_list = get_goods_articles($goods['goods_id']);   // 关联文章
+        if(is_array($group_goods_list)){ //by mike add
+            foreach($group_goods_list as $k=>$val){
+                $group_goods_list[$k]['goods_name'] = '[套餐'.$val['group_id'].']'.$val['goods_name'];    
+            }
+        }
+
 
         /* 商品图片路径 */
         if (isset($GLOBALS['shop_id']) && ($GLOBALS['shop_id'] > 10) && !empty($goods['original_img']))
@@ -414,7 +428,14 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
 
     /* 创建 html editor */
     create_html_editor('goods_desc', $goods['goods_desc']);
-
+    
+    /*DRP_START*/
+    $sql = "SELECT touch_sale,touch_fencheng FROM " . $ecs->table('drp_goods') . " WHERE goods_id = '$_REQUEST[goods_id]'";
+    $goods_sale = $db->getRow($sql);
+    $goods['touch_sale'] = $goods_sale['touch_sale'];
+    $goods['touch_fencheng'] = $goods_sale['touch_fencheng'];
+    /*DRP_END*/
+    
     /* 模板赋值 */
     $smarty->assign('code',    $code);
     $smarty->assign('ur_here', $is_add ? (empty($code) ? $_LANG['02_goods_add'] : $_LANG['51_virtual_card_add']) : ($_REQUEST['act'] == 'edit' ? $_LANG['edit_goods'] : $_LANG['copy_goods']));
@@ -640,9 +661,9 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         elseif ($_POST['goods_img_url'])
         {
             
-            if(preg_match('/(.jpg|.png|.gif|.jpeg)$/',$_POST['goods_img_url']) && copy(trim($_POST['goods_img_url']), ROOT_PATH . 'temp/' . basename($_POST['goods_img_url'])))
+            if(preg_match('/(.jpg|.png|.gif|.jpeg)$/',$_POST['goods_img_url']) && copy(trim($_POST['goods_img_url']), ROOT_PATH . 'data/caches/' . basename($_POST['goods_img_url'])))
             {
-                  $original_img = 'temp/' . basename($_POST['goods_img_url']);
+                  $original_img = 'data/caches/' . basename($_POST['goods_img_url']);
             }
             
         }
@@ -800,8 +821,9 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     /* 处理商品数据 */
     $shop_price = !empty($_POST['shop_price']) ? $_POST['shop_price'] : 0;
     $market_price = !empty($_POST['market_price']) ? $_POST['market_price'] : 0;
+    $virtual_sales = !empty($_POST['virtual_sales']) ? $_POST['virtual_sales'] : 0;
     $promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
-    $is_promote = empty($promote_price) ? 0 : 1;
+    $is_promote = empty($_POST['is_promote']) ? 0 : 1;
     $promote_start_date = ($is_promote && !empty($_POST['promote_start_date'])) ? local_strtotime($_POST['promote_start_date']) : 0;
     $promote_end_date = ($is_promote && !empty($_POST['promote_end_date'])) ? local_strtotime($_POST['promote_end_date']) : 0;
     $goods_weight = !empty($_POST['goods_weight']) ? $_POST['goods_weight'] * $_POST['weight_unit'] : 0;
@@ -815,7 +837,6 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     $warn_number = isset($_POST['warn_number']) ? $_POST['warn_number'] : 0;
     $goods_type = isset($_POST['goods_type']) ? $_POST['goods_type'] : 0;
     $give_integral = isset($_POST['give_integral']) ? intval($_POST['give_integral']) : '-1';
-	$fencheng = isset($_POST['fencheng']) ? intval($_POST['fencheng']) : '0';
     $rank_integral = isset($_POST['rank_integral']) ? intval($_POST['rank_integral']) : '-1';
     $suppliers_id = isset($_POST['suppliers_id']) ? intval($_POST['suppliers_id']) : '0';
 
@@ -833,30 +854,30 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         if ($code == '')
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
-                    "cat_id, brand_id, shop_price, market_price, is_promote, promote_price, " .
+                    "cat_id, brand_id, shop_price, market_price, virtual_sales, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, " .
-                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, rank_integral, fencheng, suppliers_id)" .
+                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, rank_integral, suppliers_id)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
-                    "'$brand_id', '$shop_price', '$market_price', '$is_promote','$promote_price', ".
+                    "'$brand_id', '$shop_price', '$market_price', '$virtual_sales', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', '$is_on_sale', '$is_alone_sale', $is_shipping, ".
-                    " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$rank_integral', '$fencheng', '$suppliers_id')";
+                    " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$rank_integral', '$suppliers_id')";
         }
         else
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
-                    "cat_id, brand_id, shop_price, market_price, is_promote, promote_price, " .
+                    "cat_id, brand_id, shop_price, market_price, virtual_sales, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, is_real, " .
-                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral, fencheng)" .
+                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
-                    "'$brand_id', '$shop_price', '$market_price', '$is_promote','$promote_price', ".
+                    "'$brand_id', '$shop_price', '$market_price', '$virtual_sales', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', 0, '$is_on_sale', '$is_alone_sale', $is_shipping, ".
-                    " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$code', '$rank_integral', '$fencheng')";
+                    " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$code', '$rank_integral')";
         }
     }
     else
@@ -885,6 +906,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "brand_id = '$brand_id', " .
                 "shop_price = '$shop_price', " .
                 "market_price = '$market_price', " .
+                "virtual_sales = '$virtual_sales', " .
                 "is_promote = '$is_promote', " .
                 "promote_price = '$promote_price', " .
                 "promote_start_date = '$promote_start_date', " .
@@ -913,7 +935,6 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "integral = '$_POST[integral]', " .
                 "give_integral = '$give_integral', " .
                 "rank_integral = '$rank_integral', " .
-				"fencheng = '$fencheng', " .
                 "is_best = '$is_best', " .
                 "is_new = '$is_new', " .
                 "is_hot = '$is_hot', " .
@@ -929,6 +950,23 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
     /* 商品编号 */
     $goods_id = $is_insert ? $db->insert_id() : $_REQUEST['goods_id'];
+
+    /*DRP_START*/
+    // 分销
+    $touch_sale = !empty($_POST['touch_sale']) ? $_POST['touch_sale'] : 0;
+    $touch_fencheng = !empty($_POST['touch_fencheng']) ? $_POST['touch_fencheng'] : 0;
+    $sql="SELECT count(*) FROM ". $ecs->table('drp_goods')."WHERE goods_id='$goods_id'";
+    if($db->getOne($sql) > 0){
+        $sql = "UPDATE " . $ecs->table('drp_goods') . " SET " .
+            "touch_sale = '$touch_sale', " .
+            "touch_fencheng = '$touch_fencheng' " .
+            "WHERE goods_id = '$goods_id' LIMIT 1";
+    }else{
+        $sql = "INSERT INTO " . $ecs->table('drp_goods') . " (goods_id, touch_sale, touch_fencheng)" .
+            "VALUES ( '$goods_id', '$touch_sale', '$touch_fencheng')";    
+    }
+    $db->query($sql);
+    /*DRP_END*/
 
     /* 记录日志 */
     if ($is_insert)
@@ -1856,7 +1894,7 @@ elseif ($_REQUEST['act'] == 'drop_image')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'get_goods_list')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
@@ -1879,7 +1917,7 @@ elseif ($_REQUEST['act'] == 'get_goods_list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add_link_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     check_authz_json('goods_manage');
@@ -1910,7 +1948,7 @@ elseif ($_REQUEST['act'] == 'add_link_goods')
     foreach ($linked_goods AS $val)
     {
         $options[] = array('value'  => $val['goods_id'],
-                        'text'      => $val['goods_name'],
+                        'text'      => '[套餐'.$val['group_id'].']'.$val['goods_name'],
                         'data'      => '');
     }
 
@@ -1923,7 +1961,7 @@ elseif ($_REQUEST['act'] == 'add_link_goods')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_link_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     check_authz_json('goods_manage');
@@ -1979,7 +2017,7 @@ elseif ($_REQUEST['act'] == 'drop_link_goods')
 
 elseif ($_REQUEST['act'] == 'add_group_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     check_authz_json('goods_manage');
@@ -1988,11 +2026,12 @@ elseif ($_REQUEST['act'] == 'add_group_goods')
     $arguments  = $json->decode($_GET['JSON']);
     $goods_id   = $arguments[0];
     $price      = $arguments[1];
+    $group_id      = $arguments[2];//by mike add
 
     foreach ($fittings AS $val)
     {
-        $sql = "INSERT INTO " . $ecs->table('group_goods') . " (parent_id, goods_id, goods_price, admin_id) " .
-                "VALUES ('$goods_id', '$val', '$price', '$_SESSION[admin_id]')";
+        $sql = "INSERT INTO " . $ecs->table('group_goods') . " (parent_id, goods_id, goods_price, admin_id, group_id) " .
+                "VALUES ('$goods_id', '$val', '$price', '$_SESSION[admin_id]', '$group_id')";//by mike add
         $db->query($sql, 'SILENT');
     }
 
@@ -2002,7 +2041,7 @@ elseif ($_REQUEST['act'] == 'add_group_goods')
     foreach ($arr AS $val)
     {
         $opt[] = array('value'      => $val['goods_id'],
-                        'text'      => $val['goods_name'],
+                        'text'      => '[套餐'.$val['group_id'].']'.$val['goods_name'],
                         'data'      => '');
     }
 
@@ -2016,7 +2055,7 @@ elseif ($_REQUEST['act'] == 'add_group_goods')
 
 elseif ($_REQUEST['act'] == 'drop_group_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     check_authz_json('goods_manage');
@@ -2040,7 +2079,7 @@ elseif ($_REQUEST['act'] == 'drop_group_goods')
     foreach ($arr AS $val)
     {
         $opt[] = array('value'      => $val['goods_id'],
-                        'text'      => $val['goods_name'],
+                        'text'      => '[套餐'.$val['group_id'].']'.$val['goods_name'],
                         'data'      => '');
     }
 
@@ -2054,7 +2093,7 @@ elseif ($_REQUEST['act'] == 'drop_group_goods')
 
 elseif ($_REQUEST['act'] == 'get_article_list')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     $filters =(array) $json->decode(json_str_iconv($_GET['JSON']));
@@ -2085,7 +2124,7 @@ elseif ($_REQUEST['act'] == 'get_article_list')
 
 elseif ($_REQUEST['act'] == 'add_goods_article')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     check_authz_json('goods_manage');
@@ -2120,7 +2159,7 @@ elseif ($_REQUEST['act'] == 'add_goods_article')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_goods_article')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     check_authz_json('goods_manage');
@@ -2564,24 +2603,32 @@ elseif ($_REQUEST['act'] == 'batch_product')
     /* 返回 */
     sys_msg($_LANG['no_operation'], 1, $link);
 }
+/*------------------------------------------------------ */
+//-- 修改商品虚拟数量
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'edit_virtual_sales')
+{
+    check_authz_json('goods_manage');
 
- /*------------------------------------------------------ */  
-//-- 修改商品虚拟销量  
-/*------------------------------------------------------ */  
-elseif ($_REQUEST['act'] == 'edit_sales_volume_base')  
-{  
-    check_authz_json('goods_manage');  
-  
-    $goods_id = intval($_POST['id']);  
-    $sales_volume_base = json_str_iconv(trim($_POST['val']));  
-  
-    if ($exc->edit("sales_volume_base = '$sales_volume_base', last_update=" .gmtime(), $goods_id))  
-    {  
-        clear_cache_files();  
-        make_json_result(stripslashes($sales_volume_base));  
-    }  
-}  
+    $goods_id   = intval($_POST['id']);
+    $virtual_sales  = intval($_POST['val']);
 
+    if($virtual_sales < 0 || $virtual_sales == 0 && $_POST['val'] != "$virtual_sales")
+    {
+        make_json_error($_LANG['virtual_sales_error']);
+    }
+
+    if(check_goods_product_exist($goods_id) == 1)
+    {
+        make_json_error($_LANG['sys']['wrong'] . $_LANG['cannot_goods_number']);
+    }
+
+    if ($exc->edit("virtual_sales = '$virtual_sales', last_update=" .gmtime(), $goods_id))
+    {
+        clear_cache_files();
+        make_json_result($virtual_sales);
+    }
+}
 /**
  * 列表链接
  * @param   bool    $is_add         是否添加（插入）

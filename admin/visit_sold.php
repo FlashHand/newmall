@@ -13,11 +13,11 @@
  * $Id: visit_sold.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . 'includes/lib_order.php');
-require_once('../languages/' .$_CFG['lang']. '/admin/statistic.php');
+require_once(BASE_PATH . 'helpers/order_helper.php');
+require_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/statistic.php');
 $smarty->assign('lang',    $_LANG);
 
 /* act操作项的初始化 */
@@ -58,7 +58,7 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'download')
             $order_by = $k + 1;
             $data .= "$order_by\t$row[goods_name]\t$row[click_count]\t$row[sold_times]\t$row[scale]\n";
         }
-        echo ecs_iconv(EC_CHARSET, 'GB2312', $data);
+        echo ecs_iconv(CHARSET, 'GB2312', $data);
         exit;
     }
 

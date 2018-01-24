@@ -13,10 +13,10 @@
  * $Id: ad_position.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/ads.php');
+require_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/ads.php');
 
 /* act操作项的初始化 */
 if (empty($_REQUEST['act']))

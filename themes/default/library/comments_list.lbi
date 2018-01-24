@@ -1,129 +1,140 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<!--用户评论 START-->
-     <div class="box">
-     <div class="box_1">
-      <h3><span class="text">{$lang.user_comment}</span>({$lang.total}<font class="f1">{$pager.record_count}</font>{$lang.user_comment_num})</h3>
-      <div class="boxCenterList clearfix" style="height:1%;">
-       <ul class="comments">
-       <!-- {if $comments} -->
-       <!-- {foreach from=$comments item=comment} -->
-        <li class="word">
-        <font class="f2"><!-- {if $comment.username} -->{$comment.username|escape:html}<!-- {else} -->{$lang.anonymous}<!-- {/if} --></font> <font class="f3">( {$comment.add_time} )</font><br />
-        <img src="../images/stars{$comment.rank}.gif" alt="{$comment.comment_rank}" />
-        <p>{$comment.content}</p>
-				<!-- {if $comment.re_content} -->
-        <p><font class="f1">{$lang.admin_username}</font>{$comment.re_content}</p>
-				<!-- {/if} -->
-        </li>
-        <!-- {/foreach} -->
-        <!--{else}-->
-        <li>{$lang.no_comments}</li>
-        <!--{/if}-->
-       </ul>
-       <!--翻页 start-->
-       <div id="pagebar" class="f_r">
-        <form name="selectPageForm" action="{$smarty.server.PHP_SELF}" method="get">
-        <!-- {if $pager.styleid eq 0 } -->
-        <div id="pager">
-          {$lang.pager_1}{$pager.record_count}{$lang.pager_2}{$lang.pager_3}{$pager.page_count}{$lang.pager_4} <span> <a href="{$pager.page_first}">{$lang.page_first}</a> <a href="{$pager.page_prev}">{$lang.page_prev}</a> <a href="{$pager.page_next}">{$lang.page_next}</a> <a href="{$pager.page_last}">{$lang.page_last}</a> </span>
-            <!--{foreach from=$pager.search key=key item=item}-->
-            <input type="hidden" name="{$key}" value="{$item}" />
-            <!--{/foreach}-->
-        </div>
-        <!--{else}-->
-
-        <!--翻页 start-->
-         <div id="pager" class="pagebar">
-          <span class="f_l f6" style="margin-right:10px;">{$lang.total} <b>{$pager.record_count}</b> {$lang.user_comment_num}</span>
-          <!-- {if $pager.page_first} --><a href="{$pager.page_first}">1 ...</a><!-- {/if} -->
-          <!-- {if $pager.page_prev} --><a class="prev" href="{$pager.page_prev}">{$lang.page_prev}</a><!-- {/if} -->
-          <!--{foreach from=$pager.page_number key=key item=item}-->
-                <!-- {if $pager.page eq $key} -->
-                <span class="page_now">{$key}</span>
-                <!-- {else} -->
-                <a href="{$item}">[{$key}]</a>
-                <!-- {/if} -->
-            <!--{/foreach}-->
-
-          <!-- {if $pager.page_next} --><a class="next" href="{$pager.page_next}">{$lang.page_next}</a><!-- {/if} -->
-          <!-- {if $pager.page_last} --><a class="last" href="{$pager.page_last}">...{$pager.page_count}</a><!-- {/if} -->
-          <!-- {if $pager.page_kbd} -->
-            <!--{foreach from=$pager.search key=key item=item}-->
-            <input type="hidden" name="{$key}" value="{$item}" />
-            <!--{/foreach}-->
-            <kbd style="float:left; margin-left:8px; position:relative; bottom:3px;"><input type="text" name="page" onkeydown="if(event.keyCode==13)selectPage(this)" size="3" class="B_blue" /></kbd>
-            <!-- {/if} -->
-        </div>
-        <!--翻页 END-->
-
-        <!-- {/if} -->
-        </form>
-        <script type="Text/Javascript" language="JavaScript">
-        <!--
-        {literal}
-        function selectPage(sel)
-        {
-          sel.form.submit();
-        }
-        {/literal}
-        //-->
-        </script>
-      </div>
-      <!--翻页 END-->
-      <div class="blank5"></div>
-      <!--评论表单 start-->
-      <div class="commentsList">
-      <form action="javascript:;" onsubmit="submitComment(this)" method="post" name="commentForm" id="commentForm">
-       <table width="710" border="0" cellspacing="5" cellpadding="0">
-        <tr>
-          <td width="64" align="right">{$lang.username}：</td>
-          <td width="631"{if !$enabled_captcha}{/if}><!--{if $smarty.session.user_name}-->{$smarty.session.user_name}<!--{else}-->{$lang.anonymous}<!--{/if}--></td>
-        </tr>
-        <tr>
-          <td align="right">E-mail：</td>
-          <td>
-          <input type="text" name="email" id="email"  maxlength="100" value="{$smarty.session.email|escape}" class="inputBorder"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">{$lang.comment_rank}：</td>
-          <td>
-          <input name="comment_rank" type="radio" value="1" id="comment_rank1" /> <img src="../images/stars1.gif" />
-          <input name="comment_rank" type="radio" value="2" id="comment_rank2" /> <img src="../images/stars2.gif" />
-          <input name="comment_rank" type="radio" value="3" id="comment_rank3" /> <img src="../images/stars3.gif" />
-          <input name="comment_rank" type="radio" value="4" id="comment_rank4" /> <img src="../images/stars4.gif" />
-          <input name="comment_rank" type="radio" value="5" checked="checked" id="comment_rank5" /> <img src="../images/stars5.gif" />
-          </td>
-        </tr>
-        <tr>
-          <td align="right" valign="top">{$lang.comment_content}：</td>
-          <td>
-          <textarea name="content" class="inputBorder" style="height:50px; width:620px;"></textarea>
-          <input type="hidden" name="cmt_type" value="{$comment_type}" />
-          <input type="hidden" name="id" value="{$id}" />
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-          <!-- 判断是否启用验证码{if $enabled_captcha} -->
-          <div style="padding-left:15px; text-align:left; float:left;">
-          {$lang.comment_captcha}：<input type="text" name="captcha"  class="inputBorder" style="width:50px; margin-left:5px;"/>
-          <img src="captcha.php?{$rand}" alt="captcha" onClick="this.src='captcha.php?'+Math.random()" class="captcha">
-          </div>
-          <!-- {/if} -->
-          <input name="" type="submit"  value="" class="f_r" style="border:none; background:url(../images/commentsBnt.gif); width:75px; height:21px; margin-right:8px;">
-          </td>
-        </tr>
-      </table>
-      </form>
-      </div>
-      <!--评论表单 end-->
-      </div>
-     </div>
-    </div>
-    <div class="blank5"></div>
-  <!--用户评论 END-->
+<div class="goods-evaluation-page of-hidden ect-tab j-ect-tab">
+	<div class="hd j-tab-title tab-title b-color-f of-hidden">
+		<ul class="dis-box">
+			<li class="box-flex active">{$lang.all_comment}<em class="dis-block m-top04">205</em></li>
+			<li class="box-flex">{$lang.favorable_comment}<em class="dis-block m-top04">115</em></li>
+			<li class="box-flex">{$lang.medium_comment}<em class="dis-block m-top04">35</em></li>
+			<li class="box-flex">{$lang.bad_comment}<em class="dis-block m-top04">15</em></li>
+			<li class="box-flex">有图<em class="dis-block m-top04">55</em></li>
+		</ul>
+	</div>
+	<div id="j-tab-con" class="b-color-f tab-con m-top06">
+		<div class="swiper-wrapper">
+			<section class="swiper-slide of-hidden">
+				<!-- {foreach from=$comment_list item=comment} -->
+				<div class="evaluation-list padding-all">
+					<header class="of-hidden ">
+						<p class="fl">
+							<span class="grade-star g-star-{$comment.rank} fl"></span>
+							<em class="t-remark fl"><!--{if $comment.username}-->{$comment.username|escape:html}<!--{else}-->{$lang.anonymous}<!--{/if}--></em>
+						</p>
+						<p class="fr t-remark">{$comment.add_time}</p>
+					</header>
+					<p class="clear m-top10 t-goods1">{$comment.content}</p>
+					<!-- {if $comment.re_content} -->
+					<p><font class="f1">{$lang.admin_username}</font>{$comment.re_content}</p>
+					<!-- {/if} -->
+					<p class="clear m-top08 t-remark">颜色分类：70cm、5144蓝色</p>
+				</div>
+				<!-- {/foreach} -->
+			</section>
+			<section class="swiper-slide">
+				<!-- {foreach from=$comment_fav item=comment} -->
+				<div class="evaluation-list padding-all">
+					<header class="of-hidden ">
+						<p class="fl"><span class="grade-star g-star-{$comment.rank} fl"></span><em class="t-remark fl"><!--{if $comment.username}-->{$comment.username|escape:html}<!--{else}-->{$lang.anonymous}<!--{/if}--></em></p>
+						<p class="fr t-remark">{$comment.add_time}</p>
+					</header>
+					<p class="clear m-top10 t-goods1">{$comment.content}</p>
+					<!-- {if $comment.re_content} -->
+					<p><font class="f1">{$lang.admin_username}</font>{$comment.re_content}</p>
+					<!-- {/if} -->
+					<p class="clear m-top08 t-remark">颜色分类：70cm、5144蓝色</p>
+				</div>
+				<!-- {/foreach} -->
+			</section>
+			<section class="swiper-slide">
+				<!-- {foreach from=$comment_med item=comment} -->
+				<div class="evaluation-list padding-all">
+					<header class="of-hidden ">
+						<p class="fl"><span class="grade-star g-star-{$comment.rank} fl"></span><em class="t-remark fl"><!--{if $comment.username}-->{$comment.username|escape:html}<!--{else}-->{$lang.anonymous}<!--{/if}--></em></p>
+						<p class="fr t-remark">{$comment.add_time}</p>
+					</header>
+					<p class="clear m-top10 t-goods1">{$comment.content}</p>
+					<!-- {if $comment.re_content} -->
+					<p><font class="f1">{$lang.admin_username}</font>{$comment.re_content}</p>
+					<!-- {/if} -->
+					<p class="clear m-top08 t-remark">颜色分类：70cm、5144蓝色</p>
+				</div>
+				<!-- {/foreach} -->
+			</section>
+			<section class="swiper-slide">
+				<!-- {foreach from=$comment_bad item=comment} -->
+				<div class="evaluation-list padding-all">
+					<header class="of-hidden ">
+						<p class="fl"><span class="grade-star g-star-{$comment.rank} fl"></span><em class="t-remark fl"><!--{if $comment.username}-->{$comment.username|escape:html}<!--{else}-->{$lang.anonymous}<!--{/if}--></em></p>
+						<p class="fr t-remark">{$comment.add_time}</p>
+					</header>
+					<p class="clear m-top10 t-goods1">{$comment.content}</p>
+					<!-- {if $comment.re_content} -->
+					<p><font class="f1">{$lang.admin_username}</font>{$comment.re_content}</p>
+					<!-- {/if} -->
+					<p class="clear m-top08 t-remark">颜色分类：70cm、5144蓝色</p>
+				</div>
+				<!-- {/foreach} -->
+			</section>
+			<!--带图评价-->
+			<section class="swiper-slide">
+				<!-- {foreach from=$comment_med item=comment} -->
+				<div class="evaluation-list padding-all">
+					<header class="of-hidden ">
+						<p class="fl"><span class="grade-star g-star-{$comment.rank} fl"></span><em class="t-remark fl"><!--{if $comment.username}-->{$comment.username|escape:html}<!--{else}-->{$lang.anonymous}<!--{/if}--></em></p>
+						<p class="fr t-remark">{$comment.add_time}</p>
+					</header>
+					<p class="clear m-top10 t-goods1">{$comment.content}</p>
+					<!-- {if $comment.re_content} -->
+					<p><font class="f1">{$lang.admin_username}</font>{$comment.re_content}</p>
+					<!-- {/if} -->
+					<p class="clear m-top08 t-remark">颜色分类：70cm、5144蓝色</p>
+				</div>
+				<!-- {/foreach} -->
+			</section>
+		</div>
+	</div>
+</div>
+</div>
+<!--引用js-->
+<script type="text/javascript" src="/ectouch/ectouch/themes/default/statics/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/ectouch/ectouch/themes/default/statics/js/swiper-3.2.5.min.js"></script>
+<script type="text/javascript" src="/ectouch/ectouch/themes/default/statics/js/ectouch.js"></script>
+<script>
+	/*切换*/
+			var tabsSwiper = new Swiper('#j-tab-con', {
+				speed: 100,
+				noSwiping: true,
+				autoHeight: true,
+				onSlideChangeStart: function() {
+					$(".j-tab-title .active").removeClass('active')
+					$(".j-tab-title li").eq(tabsSwiper.activeIndex).addClass('active')
+				}
+			})
+			$(".j-tab-title li").on('touchstart mousedown', function(e) {
+				e.preventDefault()
+				$(".j-tab-title .active").removeClass('active')
+				$(this).addClass('active')
+				tabsSwiper.slideTo($(this).index())
+			})
+			$(".j-tab-title li").click(function(e) {
+					e.preventDefault()
+				})
+				/*店铺信息商品滚动*/
+			var swiper = new Swiper('.j-g-e-p-pic', {
+				scrollbarHide: true,
+				slidesPerView: 'auto',
+				centeredSlides: false,
+				grabCursor: true
+			});
+</script>
 <script type="text/javascript">
+			/*点击下拉菜单*/
+			function openMune() {
+			    if ($(".ect-nav").is(":visible")) {
+			        $(".ect-nav").hide();
+			    } else {
+			        $(".ect-nav").show();
+			    }
+			}
 //<![CDATA[
 {foreach from=$lang.cmt_lang item=item key=key}
 var {$key} = "{$item}";
@@ -184,8 +195,11 @@ function submitComment(frm)
       alert(captcha_not_null);
       return false;
    }
-
-   Ajax.call('comment.php', 'cmt=' + cmt.toJSONString(), commentResponse, 'POST', 'JSON');
+	
+   $.post('{:url('comment/index')}', {'cmt':$.toJSON(cmt)}, function(data){
+   	commentResponse(data);
+   }, 'json');
+   //Ajax.call('{:url('comment/index')}', 'cmt=' + cmt.toJSONString(), commentResponse, 'POST', 'JSON');
    return false;
 }
 

@@ -1,8 +1,8 @@
 <!-- $Id: goods_info.htm 17126 2010-04-23 10:30:26Z liuhui $ -->
 {include file="pageheader.htm"}
 {insert_scripts files="../js/utils.js,selectzone.js,colorselector.js"}
-<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
-<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../data/assets/js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../data/assets/js/calendar/calendar.css" rel="stylesheet" type="text/css" />
 
 {if $warning}
 <ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
@@ -21,8 +21,8 @@
         class="tab-back" id="properties-tab">{$lang.tab_properties}</span>{/if}<span
         class="tab-back" id="gallery-tab">{$lang.tab_gallery}</span><span
         class="tab-back" id="linkgoods-tab">{$lang.tab_linkgoods}</span>{if $code eq ''}<span
-        class="tab-back" id="groupgoods-tab">{$lang.tab_groupgoods}</span>{/if}<span
-        class="tab-back" id="article-tab">{$lang.tab_article}</span>
+        class="tab-back" id="groupgoods-tab">{$lang.tab_groupgoods}</span>{/if}<!-- <span
+        class="tab-back" id="article-tab">{$lang.tab_article}</span> -->
       </p>
     </div>
 
@@ -97,10 +97,24 @@
          {/if}
           <tr>
             <td class="label">{$lang.lab_shop_price}</td>
-            <td><input type="text" name="shop_price" value="{$goods.shop_price}" size="20" onblur="priceSetted()"/>
+            <td><input type="text" name="shop_price" value="{$goods.shop_price}" size="20" onchange="priceSetted()"/>
             <input type="button" value="{$lang.compute_by_mp}" onclick="marketPriceSetted()" />
             {$lang.require_field}</td>
           </tr>
+          <!--/*DRP_START*/-->
+            <tr>
+                <td class="label">{$lang.lab_shop_profit}</td>
+                <td><input type="text" name="touch_sale" value="{$goods.touch_sale}" size="20" />
+                    </td>
+            </tr>
+        <!--隐藏分成框
+            <tr>
+                <td class="label">{$lang.touch_fencheng}</td>
+                <td><input type="text" name="touch_fencheng" value="{$goods.touch_fencheng}" size="20" onblur="priceSetted()"/>
+                </td>
+            </tr>
+            -->
+          <!--/*DRP_END*/-->
           {if $user_rank_list}
           <tr>
             <td class="label"><a href="javascript:showNotice('noticeUserPrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_user_price}</td>
@@ -140,15 +154,14 @@
           <!--鍟嗗搧浼樻儬浠锋牸 end -->
 
           <tr>
-            <td class="label">分成金额</td>
-            <td><input type="text" name="fencheng" value="{$goods.fencheng}" size="20" />
-            <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="rankIntegral">该商品出售后，需要用于分成的金额</span></td>
-          </tr>
-
-          <tr>
             <td class="label">{$lang.lab_market_price}</td>
             <td><input type="text" name="market_price" value="{$goods.market_price}" size="20" />
               <input type="button" value="{$lang.integral_market_price}" onclick="integral_market_price()" />
+            </td>
+          </tr>
+          <tr>
+            <td class="label">{$lang.lab_virtual_sales}</td>
+            <td><input type="text" name="virtual_sales" value="{$goods.virtual_sales}" size="20" />
             </td>
           </tr>
           <tr>
@@ -206,9 +219,9 @@
         </table>
 
         <!-- 璇︾粏鎻忚堪 -->
-        <table width="90%" id="detail-table" style="display:none">
+        <table width="100%" id="detail-table" style="display:none" align="center">
           <tr>
-            <td>{$FCKeditor}</td>
+            <td>{$fckeditor}</td>
           </tr>
         </table>
 
@@ -376,7 +389,8 @@
             </td>
             <td align="center">
               <p>{$lang.price}<br /><input name="price2" type="text" size="6" /></p>
-              <p><input type="button" value=">" onclick="sz2.addItem(false, 'add_group_goods', goodsId, this.form.elements['price2'].value)" class="button" /></p>
+              <p>套餐<br /><select name="group2"><option value="1">套餐一</option><option value="2">套餐二</option><option value="3">套餐三</option></select></p>
+              <p><input type="button" value=">" onclick="sz2.addItem(false, 'add_group_goods', goodsId, this.form.elements['price2'].value, this.form.elements['group2'].value)" class="button" /></p>
               <p><input type="button" value="<" onclick="sz2.dropItem(false, 'drop_group_goods', goodsId, elements['is_single'][0].checked)" class="button" /></p>
               <p><input type="button" value="<<" onclick="sz2.dropItem(true, 'drop_group_goods', goodsId, elements['is_single'][0].checked)" class="button" /></p>
             </td>

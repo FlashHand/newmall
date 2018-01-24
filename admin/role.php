@@ -13,7 +13,7 @@
  * $Id: privilege.php 16529 2009-08-12 05:38:57Z wangleisvn $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -96,7 +96,7 @@ elseif ($_REQUEST['act'] == 'add')
 {
     /* 检查权限 */
     admin_priv('admin_manage');
-    include_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/priv_action.php');
+    include_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/priv_action.php');
 
     $priv_str = '';
 
@@ -177,7 +177,7 @@ elseif ($_REQUEST['act'] == 'insert')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'edit')
 {
-     include_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/priv_action.php');
+     include_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/priv_action.php');
     $_REQUEST['id'] = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
         /* 获得该管理员的权限 */
     $priv_str = $db->getOne("SELECT action_list FROM " .$ecs->table('role'). " WHERE role_id = '$_GET[id]'");

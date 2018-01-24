@@ -13,7 +13,7 @@
  * $Id: edit_languages.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -36,7 +36,7 @@ if ($_REQUEST['act'] == 'list')
 {
     //从languages目录下获取语言项文件
     $lang_arr    = array();
-    $lang_path   = '../languages/' .$_CFG['lang'];
+    $lang_path   = '../include/languages/' .$_CFG['lang'];
     $lang_dir    = @opendir($lang_path);
 
     while ($file = @readdir($lang_dir))
@@ -55,15 +55,15 @@ if ($_REQUEST['act'] == 'list')
     $lang_file = isset($_POST['lang_file']) ? trim($_POST['lang_file']) : '';
     if ($lang_file == 'common')
     {
-        $file_path = '../languages/'.$_CFG['lang'].'/common.php';
+        $file_path = '../include/languages/'.$_CFG['lang'].'/common.php';
     }
     elseif ($lang_file == 'shopping_flow')
     {
-        $file_path = '../languages/'.$_CFG['lang'].'/shopping_flow.php';
+        $file_path = '../include/languages/'.$_CFG['lang'].'/shopping_flow.php';
     }
     else
     {
-        $file_path = '../languages/'.$_CFG['lang'].'/user.php';
+        $file_path = '../include/languages/'.$_CFG['lang'].'/user.php';
     }
 
     $file_attr = '';
@@ -117,7 +117,7 @@ elseif ($_REQUEST['act'] == 'edit')
         else
         {
             $_POST['item_content'][$i] = str_replace('\\\\n', '\\n', $_POST['item_content'][$i]);
-            $dst_items[$i] = $_POST['item_id'][$i] .' = '. '"' .$_POST['item_content'][$i]. '";';
+            $dst_items[$i] = $_POST['item_id'][$i] .' = '. '\'' .$_POST['item_content'][$i]. '\';';
         }
     }
 

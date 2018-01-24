@@ -1,7 +1,7 @@
 <!-- $Id: favourable_info.htm 14361 2008-04-07 09:26:17Z zhuwenyuan $ -->
 {include file="pageheader.htm"}
-<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
-<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../data/assets/js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../data/assets/js/calendar/calendar.css" rel="stylesheet" type="text/css" />
 {insert_scripts files="validator.js,../js/transport.js}
 <div class="main-div">
 <form method="post" action="favourable.php" name="theForm" enctype="multipart/form-data" onSubmit="return validate()">
@@ -58,6 +58,9 @@
       <option value="0" {if $favourable.act_type eq 0}selected="selected"{/if}>{$lang.fat_goods}</option>
       <option value="1" {if $favourable.act_type eq 1}selected="selected"{/if}>{$lang.fat_price}</option>
       <option value="2" {if $favourable.act_type eq 2}selected="selected"{/if}>{$lang.fat_discount}</option>
+	  <!--手机专享价-->
+	  <option value="3" {if $favourable.act_type eq 3}selected="selected"{/if}>{$lang.fat_Premium}</option>
+	  <!--手机专享价-->
       </select>
       <input name="act_type_ext" type="text" id="act_type_ext" value="{$favourable.act_type_ext}" size="10" />
       <br />
@@ -84,6 +87,18 @@
         <input name="add_gift" type="button" class="button" id="add_gift" onclick="addGift()" value="+" />
       </a></td>
   </tr>
+<tr>
+    <td class="label">
+        {$lang.touch_img}
+    </td>
+    <td>
+        <input type="file" name="touch_img" value="{$favourable.touch_img}" id="touch_img" size="45">
+        {if $favourable.touch_img neq ""}
+        <input type="button" value="{$lang.drop_touch_img}" onclick="if (confirm('{$lang.confirm_drop_img}'))location.href='favourable.php?act=drop_img&id={$favourable.act_id}'">
+        {/if}
+        </span>
+    </td>
+</tr>
   <tr>
     <td colspan="2" align="center">
       <input type="submit" class="button" value="{$lang.button_submit}" />

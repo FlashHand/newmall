@@ -13,7 +13,7 @@
  * $Id: affiliate.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 require(dirname(__FILE__) . '/includes/init.php');
 admin_priv('affiliate');
 $config = get_affiliate();
@@ -217,7 +217,7 @@ function put_affiliate($config)
 {
     $temp = serialize($config);
     $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .
-           "SET  value = '$temp'" .
+           "SET  value = '$temp' " .
            "WHERE code = 'affiliate'";
     $GLOBALS['db']->query($sql);
     clear_all_files();

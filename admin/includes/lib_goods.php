@@ -13,7 +13,7 @@
  * $Id: lib_goods.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-if (!defined('IN_ECS'))
+if (!defined('IN_ECTOUCH'))
 {
     die('Hacking attempt');
 }
@@ -625,7 +625,7 @@ function get_attr_list($cat_id, $goods_id = 0)
             "LEFT JOIN " .$GLOBALS['ecs']->table('goods_attr'). " AS v ".
             "ON v.attr_id = a.attr_id AND v.goods_id = '$goods_id' ".
             "WHERE a.cat_id = " . intval($cat_id) ." OR a.cat_id = 0 ".
-            "ORDER BY a.sort_order, a.attr_type, a.attr_id, v.attr_price, v.goods_attr_id";
+            "ORDER BY a.sort_order, a.attr_type, v.goods_attr_id, a.attr_id ";
 
     $row = $GLOBALS['db']->GetAll($sql);
 
@@ -763,7 +763,7 @@ function get_linked_goods($goods_id)
  */
 function get_group_goods($goods_id)
 {
-    $sql = "SELECT gg.goods_id, CONCAT(g.goods_name, ' -- [', gg.goods_price, ']') AS goods_name " .
+    $sql = "SELECT gg.goods_id, gg.group_id, CONCAT(g.goods_name, ' -- [', gg.goods_price, ']') AS goods_name " .
             "FROM " . $GLOBALS['ecs']->table('group_goods') . " AS gg, " .
                 $GLOBALS['ecs']->table('goods') . " AS g " .
             "WHERE gg.parent_id = '$goods_id' " .
@@ -772,6 +772,7 @@ function get_group_goods($goods_id)
     {
         $sql .= " AND gg.admin_id = '$_SESSION[admin_id]'";
     }
+    $sql .= " order by gg.group_id asc, g.goods_id asc"; //by mike add
     $row = $GLOBALS['db']->getAll($sql);
 
     return $row;
@@ -908,7 +909,7 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
         /* 分页大小 */
         $filter = page_and_size($filter);
 
-        $sql = "SELECT goods_id, goods_name, goods_type, goods_sn, shop_price, is_on_sale, is_best, is_new, is_hot, sort_order, goods_number, integral, sales_volume_base, " .
+        $sql = "SELECT goods_id, goods_name, goods_type, goods_sn, virtual_sales, shop_price, is_on_sale, is_best, is_new, is_hot, sort_order, goods_number, integral, " .
                     " (promote_price > 0 AND promote_start_date <= '$today' AND promote_end_date >= '$today') AS is_promote ".
                     " FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE is_delete='$is_delete' $where" .
                     " ORDER BY $filter[sort_by] $filter[sort_order] ".
@@ -996,7 +997,8 @@ function product_goods_attr_list($goods_id)
         return array();  //$goods_id不能为空
     }
 
-    $sql = "SELECT goods_attr_id, attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE goods_id = '$goods_id'";
+    $sql = "SELECT goods_attr_id, attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE goods_id = '$goods_id' order by goods_attr_id DESC";
+
     $results = $GLOBALS['db']->getAll($sql);
 
     $return_arr = array();
@@ -1028,7 +1030,8 @@ function get_goods_specifications_list($goods_id)
                     ON a.attr_id = g.attr_id
             WHERE goods_id = '$goods_id'
             AND a.attr_type = 1
-            ORDER BY g.attr_id ASC";
+            ORDER BY g.goods_attr_id ASC";
+
     $results = $GLOBALS['db']->getAll($sql);
 
     return $results;

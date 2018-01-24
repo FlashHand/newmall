@@ -13,12 +13,12 @@
  * $Id: database.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . ADMIN_PATH . '/includes/cls_sql_dump.php');
 
-@ini_set('memory_limit', '64M');
+@ini_set('memory_limit', '512M');
 
 /* 备份页面 */
 if ($_REQUEST['act'] == 'backup')
@@ -475,7 +475,7 @@ if ($_REQUEST['act'] == 'upload_sql')
     /* 权限判断 */
     admin_priv('db_renew');
 
-    $sql_file = ROOT_PATH . DATA_DIR . '/upload_database_bak.sql';
+    $sql_file = ROOT_PATH . DATA_DIR . '/attached/upload_database_bak.sql';
 
     if (empty($_GET['mysql_ver_confirm']))
     {
@@ -646,10 +646,10 @@ function sql_import($sql_file)
             $ret[$i] = trim($ret[$i], " \r\n;"); //剔除多余信息
             if (!empty($ret[$i]))
             {
-                if ((strpos($ret[$i], 'CREATE TABLE') !== false) && (strpos($ret[$i], 'DEFAULT CHARSET='. str_replace('-', '', EC_CHARSET) )=== false))
+                if ((strpos($ret[$i], 'CREATE TABLE') !== false) && (strpos($ret[$i], 'DEFAULT CHARSET='. str_replace('-', '', CHARSET) )=== false))
                 {
                     /* 建表时缺 DEFAULT CHARSET=utf8 */
-                    $ret[$i] = $ret[$i] . 'DEFAULT CHARSET='. str_replace('-', '', EC_CHARSET);
+                    $ret[$i] = $ret[$i] . 'DEFAULT CHARSET='. str_replace('-', '', CHARSET);
                 }
                 $GLOBALS['db']->query($ret[$i]);
             }
@@ -660,9 +660,9 @@ function sql_import($sql_file)
         for($i = 0; $i < $ret_count; $i++)
         {
             $ret[$i] = trim($ret[$i], " \r\n;"); //剔除多余信息
-            if ((strpos($ret[$i], 'CREATE TABLE') !== false) && (strpos($ret[$i], 'DEFAULT CHARSET='. str_replace('-', '', EC_CHARSET) )!== false))
+            if ((strpos($ret[$i], 'CREATE TABLE') !== false) && (strpos($ret[$i], 'DEFAULT CHARSET='. str_replace('-', '', CHARSET) )!== false))
             {
-                $ret[$i] = str_replace('DEFAULT CHARSET='. str_replace('-', '', EC_CHARSET), '', $ret[$i]);
+                $ret[$i] = str_replace('DEFAULT CHARSET='. str_replace('-', '', CHARSET), '', $ret[$i]);
             }
             if (!empty($ret[$i]))
             {

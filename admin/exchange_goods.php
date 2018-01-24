@@ -13,7 +13,7 @@
  * $Id $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -301,7 +301,7 @@ elseif ($_REQUEST['act'] == 'remove')
 
 elseif ($_REQUEST['act'] == 'search_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);

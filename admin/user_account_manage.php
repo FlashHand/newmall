@@ -13,11 +13,11 @@
  * $Id: user_account_manage.php 15013 2008-10-23 09:31:42Z testyang $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . 'includes/lib_order.php');
-require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/statistic.php');
+require_once(BASE_PATH . 'helpers/order_helper.php');
+require_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/statistic.php');
 $smarty->assign('lang', $_LANG);
 
 /* act操作项的初始化 */

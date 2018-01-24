@@ -13,7 +13,7 @@
  * $Id: lib_template.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-if (!defined('IN_ECS'))
+if (!defined('IN_ECTOUCH'))
 {
     die('Hacking attempt');
 }
@@ -328,10 +328,10 @@ function get_template_info($template_name, $template_style='')
         }
     }
 
-    $css_path = '../themes/' . $template_name . '/style.css';
+    $css_path = '../themes/' . $template_name . '/css/style.css';
     if ($template_style != '')
     {
-        $css_path = '../themes/' . $template_name . "/style_$template_style.css";
+        $css_path = '../themes/' . $template_name . "/css/style_$template_style.css";
     }
     if (file_exists($css_path) && !empty($template_name))
     {

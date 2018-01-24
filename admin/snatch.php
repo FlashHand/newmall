@@ -13,7 +13,7 @@
  * $Id: snatch.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 $exc = new exchange($ecs->table("goods_activity"), $db, 'act_id', 'act_name');
@@ -335,7 +335,7 @@ elseif ($_REQUEST['act'] == 'query_bid')
 
 elseif ($_REQUEST['act'] == 'search_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
@@ -356,7 +356,7 @@ elseif ($_REQUEST['act'] == 'search_goods')
 
 elseif ($_REQUEST['act'] == 'search_products')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);

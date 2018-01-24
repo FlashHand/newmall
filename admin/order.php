@@ -13,11 +13,11 @@
  * $Id: order.php 17219 2011-01-27 10:49:19Z yehuaixiao $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . 'includes/lib_order.php');
-require_once(ROOT_PATH . 'includes/lib_goods.php');
+require_once(BASE_PATH . 'helpers/order_helper.php');
+require_once(BASE_PATH . 'helpers/goods_helper.php');
 
 /*------------------------------------------------------ */
 //-- 订单查询
@@ -56,14 +56,13 @@ if ($_REQUEST['act'] == 'order_query')
 /*------------------------------------------------------ */
 
 elseif ($_REQUEST['act'] == 'list')
-{
+{ 
+   
     /* 检查权限 */
     admin_priv('order_view');
-
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['02_order_list']);
     $smarty->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $_LANG['03_order_query']));
-
     $smarty->assign('status_list', $_LANG['cs']);   // 订单状态
 
     $smarty->assign('os_unconfirmed',   OS_UNCONFIRMED);
@@ -80,6 +79,7 @@ elseif ($_REQUEST['act'] == 'list')
 
     /* 显示模板 */
     assign_query_info();
+
     $smarty->display('order_list.htm');
 }
 
@@ -395,7 +395,7 @@ elseif ($_REQUEST['act'] == 'info')
         $smarty->assign('print_time',   local_date($_CFG['time_format']));
         $smarty->assign('action_user',  $_SESSION['admin_name']);
 
-        $smarty->template_dir = '../' . DATA_DIR;
+        $smarty->template_dir = '../' . DATA_DIR . '/template';
         $smarty->display('order_print.html');
     }
     /* 打印快递单 */
@@ -508,7 +508,7 @@ elseif ($_REQUEST['act'] == 'info')
             $shipping_code = $db->getOne("SELECT shipping_code FROM " . $ecs->table('shipping') . " WHERE shipping_id=" . $order['shipping_id']);
             if ($shipping_code)
             {
-                include_once(ROOT_PATH . 'includes/modules/shipping/' . $shipping_code . '.php');
+                include_once(ROOT_PATH . 'include/modules/shipping/' . $shipping_code . '.php');
             }
 
             if (!empty($_LANG['shipping_print']))
@@ -888,29 +888,39 @@ elseif ($_REQUEST['act'] == 'delivery_ship')
             }
         }
 
-		/* 商家发货时给客户发送短信提醒 */
-		if ($_CFG['ecsdxt_order_shipped'] == '1' && $order['mobile'] != '')
-		{
-			require_once(ROOT_PATH . 'includes/lib_sms.php');
+        /* 如果需要，发短信 */
+        if ($GLOBALS['_CFG']['sms_order_shipped'] == '1' && $order['mobile'] != '')
+        {
+            // include_once('../includes/cls_sms.php');
+            $sms = new sms();
+            $sms->send($order['mobile'], sprintf($GLOBALS['_LANG']['order_shipped_sms'], $order['order_sn'],
+                local_date($GLOBALS['_LANG']['sms_time_format']), $GLOBALS['_CFG']['shop_name']), 0);
+        }
+    }
 
-			$smarty->assign('shop_name',	$_CFG['shop_name']);
-			$smarty->assign('order_sn',		$order['order_sn']);
-			$smarty->assign('time',			local_date($GLOBALS['_LANG']['sms_time_format']));
-
-			$content = $smarty->fetch('str:' . $_CFG['ecsdxt_order_shipped_value']);
-
-			$ret = sendsms($order['mobile'], $content);
+    /* 微信通 发货提醒微信用户 start  by wanglu */
+    $file = ROOT_PATH . 'include/apps/default/controllers/WechatController.class.php';
+    if(file_exists($file) && $order['user_id'] > 0){
+        $sql = 'SELECT name, config FROM '.$GLOBALS['ecs']->table('wechat_extend').' where enable = 1 and command = "send_remind" limit 1';
+        $remind = $GLOBALS['db']->getRow($sql);
+		if(!empty($remind)){
+			$remind_title = $remind['name'] ? $remind['name'] : '发货提醒';
+			$content = '';
+			if($remind['config']){
+				$config = unserialize($remind['config']);
+				$content = str_replace('[$order_id]', $order['order_sn'], $config['template']);
+			}
+			$sql1 = 'SELECT openid FROM '.$GLOBALS['ecs']->table('wechat_user').' where ect_uid = '.$order['user_id'];
+			$openid = $GLOBALS['db']->getOne($sql1);
+			if(!empty($remind_title) && !empty($openid)){
+				$order_url = $GLOBALS['ecs']->url() . 'index.php?c=user&a=order_detail&order_id='.$order['order_id'];
+				$order_url = urlencode(base64_encode($order_url));
+				$url = $GLOBALS['ecs']->url() . 'index.php?c=api&openid='.$openid.'&title='.urlencode($remind_title).'&msg='.urlencode($content).'&url='.$order_url;
+				curlGet($url);
+			}
 		}
-
- 		/* 微信发送发货通知*/
-		$wxch_order_name = 'order';
-		$sql ="select autoload from ". $GLOBALS['ecs']->table('weixin_order') ." where order_name='order'";
-		$autoload=$db->getOne($sql);
-		if($autoload=="yes"){
-			include_once(ROOT_PATH . 'mobile/wxch_notice.php');
-			weixin_notice($order,'order');
-		}
-   }
+    }
+    /* 微信通 发货提醒微信用户 end  by wanglu */
 
     /* 清除缓存 */
     clear_cache_files();
@@ -2207,11 +2217,11 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
         $total = order_weight_price($order_id);
         foreach ($shipping_list AS $key => $shipping)
         {
-            $shipping_fee = shipping_fee($shipping['shipping_code'],
-                unserialize($shipping['configure']), $total['weight'], $total['amount'], $total['number']);
+            $shipping_configure = unserialize($shipping['configure']);
+            $shipping_fee = shipping_fee($shipping['shipping_code'], $shipping_configure, $total['weight'], $total['amount'], $total['number']);
             $shipping_list[$key]['shipping_fee'] = $shipping_fee;
             $shipping_list[$key]['format_shipping_fee'] = price_format($shipping_fee);
-            $shipping_list[$key]['free_money'] = price_format($shipping['configure']['free_money']);
+            $shipping_list[$key]['free_money'] = price_format($shipping_configure['free_money']);
         }
         $smarty->assign('shipping_list', $shipping_list);
     }
@@ -2476,22 +2486,24 @@ elseif ($_REQUEST['act'] == 'templates')
     admin_priv('order_os_edit');
 
     /* 读入订单打印模板文件 */
-    $file_path    = ROOT_PATH. DATA_DIR . '/order_print.html';
+    $file_path    = DATA_PATH. 'template/order_print.html';
     $file_content = file_get_contents($file_path);
     @fclose($file_content);
 
-    include_once(ROOT_PATH."includes/fckeditor/fckeditor.php");
+    // include_once(ROOT_PATH."includes/fckeditor/fckeditor.php");
 
     /* 编辑器 */
-    $editor = new FCKeditor('FCKeditor1');
-    $editor->BasePath   = "../includes/fckeditor/";
-    $editor->ToolbarSet = "Normal";
-    $editor->Width      = "95%";
-    $editor->Height     = "500";
-    $editor->Value      = $file_content;
+    // $editor = new FCKeditor('FCKeditor1');
+    // $editor->BasePath   = "../includes/fckeditor/";
+    // $editor->ToolbarSet = "Normal";
+    // $editor->Width      = "95%";
+    // $editor->Height     = "500";
+    // $editor->Value      = $file_content;
 
-    $fckeditor = $editor->CreateHtml();
-    $smarty->assign('fckeditor', $fckeditor);
+    // $fckeditor = $editor->CreateHtml();
+    // $smarty->assign('fckeditor', $fckeditor);
+
+    create_html_editor('FCKeditor1', $file_content);
 
     /* 模板赋值 */
     $smarty->assign('ur_here',      $_LANG['edit_order_templates']);
@@ -2509,7 +2521,7 @@ elseif ($_REQUEST['act'] == 'templates')
 elseif ($_REQUEST['act'] == 'edit_templates')
 {
     /* 更新模板文件的内容 */
-    $file_name = @fopen('../' . DATA_DIR . '/order_print.html', 'w+');
+    $file_name = @fopen('../' . DATA_DIR . '/template/order_print.html', 'w+');
     @fwrite($file_name, stripslashes($_POST['FCKeditor1']));
     @fclose($file_name);
 
@@ -2842,14 +2854,18 @@ elseif ($_REQUEST['act'] == 'operate')
             {
                 die('Hacking attempt');
             }
-
             /* 删除订单 */
             $db->query("DELETE FROM ".$ecs->table('order_info'). " WHERE order_id = '$order_id'");
             $db->query("DELETE FROM ".$ecs->table('order_goods'). " WHERE order_id = '$order_id'");
             $db->query("DELETE FROM ".$ecs->table('order_action'). " WHERE order_id = '$order_id'");
+			/*DRP_START*/
+			$db->query("DELETE FROM ".$ecs->table('drp_log'). " WHERE order_id = '$order_id'");
+			$db->query("DELETE FROM ".$ecs->table('drp_order_info'). " WHERE order_id = '$order_id'");
+			$db->query("DELETE FROM ".$ecs->table('drp_order_goods'). " WHERE order_id = '$order_id'");
+			/*DRP_END*/
             $action_array = array('delivery', 'back');
             del_delivery($order_id, $action_array);
-
+			
             /* todo 记录日志 */
             admin_log($order['order_sn'], 'remove', 'order');
 
@@ -3053,7 +3069,7 @@ elseif ($_REQUEST['act'] == 'operate')
             $smarty->assign('goods_attr', $attr);
             $smarty->assign('goods_list', $goods_list);
 
-            $smarty->template_dir = '../' . DATA_DIR;
+            $smarty->template_dir = '../' . DATA_DIR . '/template';
             $html .= $smarty->fetch('order_print.html') .
                 '<div style="PAGE-BREAK-AFTER:always"></div>';
         }
@@ -3069,7 +3085,259 @@ elseif ($_REQUEST['act'] == 'operate')
         ecs_header("Location: $url\n");
         exit;
     }
+/* 导出订单功能开始 */
+    elseif (isset($_POST['export']))
+    {
+        if (empty($_POST['order_id']))
+        {
+            sys_msg($_LANG['pls_select_order']);
+        }
+        
+        /* 赋值公用信息 */
+        $smarty->assign('shop_name',    $_CFG['shop_name']);
+        $smarty->assign('shop_url',     $ecs->url());
+        $smarty->assign('shop_address', $_CFG['shop_address']);
+        $smarty->assign('service_phone',$_CFG['service_phone']);
+        $smarty->assign('print_time',   local_date($_CFG['time_format']));
+        $smarty->assign('action_user',  $_SESSION['admin_name']);
 
+        $html = '';
+        $order_sn_list = explode(',', $_POST['order_id']);
+        include_once (ROOT_PATH . 'include/vendor/PHPExcel.php');
+        include_once (ROOT_PATH . 'include/vendor/PHPExcel/IOFactory.php');
+        //require_once dirname(__FILE__) . '/Classes/PHPExcel.php';
+        //require_once dirname(__FILE__) . '/Classes/PHPExcel/IOFactory.php';
+        $PHPExcel = new PHPExcel();
+        
+        //设置excel属性基本信息
+        $PHPExcel->getProperties()->setCreator("Neo")
+        ->setLastModifiedBy("Neo")
+        ->setTitle("111")
+        ->setSubject("订单列表")
+        ->setDescription("")
+        ->setKeywords("订单列表")
+        ->setCategory("");
+        $PHPExcel->setActiveSheetIndex(0);
+        $PHPExcel->getActiveSheet()->setTitle("订单列表");
+        //填入表头主标题
+        $PHPExcel->getActiveSheet()->setCellValue('A1', $_CFG['shop_name'].'订单列表');
+        //填入表头副标题
+        $PHPExcel->getActiveSheet()->setCellValue('A2', '操作者：'.$_SESSION['admin_name'].' 导出日期：'.date('Y-m-d',time()).' 地址：'.$_CFG['shop_address'].' 电话：'.$_CFG['service_phone']);
+        //合并表头单元格
+        $PHPExcel->getActiveSheet()->mergeCells('A1:T1');
+        $PHPExcel->getActiveSheet()->mergeCells('A2:T2');
+        
+        //设置表头行高
+        $PHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(40);
+        $PHPExcel->getActiveSheet()->getRowDimension(2)->setRowHeight(20);
+        $PHPExcel->getActiveSheet()->getRowDimension(3)->setRowHeight(30);
+        
+        //设置表头字体
+        $PHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setName('黑体');
+        $PHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
+        $PHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $PHPExcel->getActiveSheet()->getStyle('A2')->getFont()->setName('宋体');
+        $PHPExcel->getActiveSheet()->getStyle('A2')->getFont()->setSize(14);
+        $PHPExcel->getActiveSheet()->getStyle('A3:T3')->getFont()->setBold(true);
+ 
+        //设置单元格边框
+        $styleArray = array(  
+            'borders' => array(  
+                'allborders' => array(  
+                    //'style' => PHPExcel_Style_Border::BORDER_THICK,//边框是粗的  
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,//细边框  
+                    //'color' => array('argb' => 'FFFF0000'),  
+                ),  
+            ),  
+        );
+        
+        //表格宽度
+        $PHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(18);//订单编号
+        $PHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);//下单时间
+        $PHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);//付款时间
+        $PHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);//发货时间
+        $PHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(18);//发货单号
+        $PHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);//支付方式
+        $PHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);//配送方式
+        $PHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(10);//配送费用
+        $PHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);//收件人
+        $PHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(35);//收货地址
+        $PHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(15);//电话
+        $PHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(15);//手机
+        $PHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(25);//邮箱
+        $PHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(15);//货号
+        $PHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(15);//商品名称
+        $PHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(15);//属性
+        $PHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(10);//价格
+        $PHPExcel->getActiveSheet()->getColumnDimension('R')->setWidth(6);//数量
+        $PHPExcel->getActiveSheet()->getColumnDimension('S')->setWidth(15);//小计
+        $PHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(15);//应付款金额
+
+        //表格标题
+        $PHPExcel->getActiveSheet()->setCellValue('A3', '订单编号');
+        $PHPExcel->getActiveSheet()->setCellValue('B3', '下单时间');
+        $PHPExcel->getActiveSheet()->setCellValue('C3', '付款时间');
+        $PHPExcel->getActiveSheet()->setCellValue('D3', '发货时间');
+        $PHPExcel->getActiveSheet()->setCellValue('E3', '发货单号');
+        $PHPExcel->getActiveSheet()->setCellValue('F3', '支付方式');
+        $PHPExcel->getActiveSheet()->setCellValue('G3', '配送方式');
+        $PHPExcel->getActiveSheet()->setCellValue('H3', '配送费用');
+        $PHPExcel->getActiveSheet()->setCellValue('I3', '收件人');
+        $PHPExcel->getActiveSheet()->setCellValue('J3', '收货地址');
+        $PHPExcel->getActiveSheet()->setCellValue('K3', '电话');
+        $PHPExcel->getActiveSheet()->setCellValue('L3', '手机');
+        $PHPExcel->getActiveSheet()->setCellValue('M3', '邮箱');
+        $PHPExcel->getActiveSheet()->setCellValue('N3', '货号');
+        $PHPExcel->getActiveSheet()->setCellValue('O3', '商品名称');
+        $PHPExcel->getActiveSheet()->setCellValue('P3', '属性');
+        $PHPExcel->getActiveSheet()->setCellValue('Q3', '价格');
+        $PHPExcel->getActiveSheet()->setCellValue('R3', '数量');
+        $PHPExcel->getActiveSheet()->setCellValue('S3', '小计');
+        $PHPExcel->getActiveSheet()->setCellValue('T3', '商品总金额');
+ 
+        $hang = 4; 
+        foreach ($order_sn_list as $order_sn) {
+            /* 取得订单信息 */
+            $order = order_info(0, $order_sn);
+            if (empty($order)) {
+                continue;
+            }
+ 
+            /* 根据订单是否完成检查权限 */
+            if (order_finished($order)) {
+                if (!admin_priv('order_view_finished', '', false)) {
+                    continue;
+                }
+            } else {
+                if (!admin_priv('order_view', '', false)) {
+                    continue;
+                }
+            }
+ 
+            /* 如果管理员属于某个办事处，检查该订单是否也属于这个办事处 */
+            $sql       = "SELECT agency_id FROM " . $ecs->table('admin_user') . " WHERE user_id = '$_SESSION[admin_id]'";
+            $agency_id = $db->getOne($sql);
+            if ($agency_id > 0) {
+                if ($order['agency_id'] != $agency_id) {
+                    continue;
+                }
+            }
+ 
+            /* 取得用户名 */
+            if ($order['user_id'] > 0) {
+                $user = user_info($order['user_id']);
+                if (!empty($user)) {
+                    $order['user_name'] = $user['user_name'];
+ 
+                }
+            }
+ 
+            /* 取得区域名 */
+            $sql             = "SELECT concat(IFNULL(c.region_name, ''), '  ', IFNULL(p.region_name, ''), " . "'  ', IFNULL(t.region_name, ''), '  ', IFNULL(d.region_name, '')) AS region " . "FROM " . $ecs->table('order_info') . " AS o " . "LEFT JOIN " . $ecs->table('region') . " AS c ON o.country = c.region_id " . "LEFT JOIN " . $ecs->table('region') . " AS p ON o.province = p.region_id " . "LEFT JOIN " . $ecs->table('region') . " AS t ON o.city = t.region_id " . "LEFT JOIN " . $ecs->table('region') . " AS d ON o.district = d.region_id " . "WHERE o.order_id = '$order[order_id]'";
+            $order['region'] = $db->getOne($sql);
+            
+            /* 其他处理 */
+            $order['order_time']    = local_date($_CFG['time_format'], $order['add_time']);
+            $order['pay_time']      = $order['pay_time'] > 0 ? local_date($_CFG['time_format'], $order['pay_time']) : $_LANG['ps'][PS_UNPAYED];
+            $order['shipping_time'] = $order['shipping_time'] > 0 ? local_date($_CFG['time_format'], $order['shipping_time']) : $_LANG['ss'][SS_UNSHIPPED];
+            $order['status']        = $_LANG['os'][$order['order_status']] . ',' . $_LANG['ps'][$order['pay_status']] . ',' . $_LANG['ss'][$order['shipping_status']];
+            $order['invoice_no']    = $order['shipping_status'] == SS_UNSHIPPED || $order['shipping_status'] == SS_PREPARING ? $_LANG['ss'][SS_UNSHIPPED] : $order['invoice_no'];
+ 
+            /* 此订单的发货备注(此订单的最后一条操作记录) */
+            $sql                   = "SELECT action_note FROM " . $ecs->table('order_action') . " WHERE order_id = '$order[order_id]' AND shipping_status = 1 ORDER BY log_time DESC";
+            $order['invoice_note'] = $db->getOne($sql);
+
+            $shuliang = 0;
+ 
+            /* 取得订单商品 */
+            $sql        = "SELECT o.*, g.goods_number AS storage, o.goods_attr, IFNULL(b.brand_name, '') AS brand_name " . "FROM " . $ecs->table('order_goods') . " AS o " . "LEFT JOIN " . $ecs->table('goods') . " AS g ON o.goods_id = g.goods_id " . "LEFT JOIN " . $ecs->table('brand') . " AS b ON g.brand_id = b.brand_id " . "WHERE o.order_id = '$order[order_id]' ";
+            $res        = $db->query($sql);
+            $shuliang   = 0;
+            $chanpin    = $hang;
+            while ($row = $db->fetchRow($res)) {
+                $shuliang = $shuliang + 1;
+                /* 虚拟商品支持 */
+                if ($row['is_real'] == 0) {
+                    /* 取得语言项 */
+                    $filename = ROOT_PATH . 'plugins/' . $row['extension_code'] . '/languages/common_' . $_CFG['lang'] . '.php';
+                    if (file_exists($filename)) {
+                        include_once($filename);
+                        if (!empty($_LANG[$row['extension_code'] . '_link'])) {
+                            $row['goods_name'] = $row['goods_name'] . sprintf($_LANG[$row['extension_code'] . '_link'], $row['goods_id'], $order['order_sn']);
+                        }
+                    }
+                }
+ 
+                $row['formated_subtotal']    = price_format($row['goods_price'] * $row['goods_number']);
+                $row['formated_goods_price'] = price_format($row['goods_price']);
+                
+                //var_dump($order);die;
+                //输出订单的商品，由于可能一个人购买多个商品，所以在这先输出了
+                $PHPExcel->getActiveSheet()->setCellValue('N' . $chanpin, $row['goods_sn']);
+                $PHPExcel->getActiveSheet()->setCellValue('O' . $chanpin, $row['goods_name']);
+                $PHPExcel->getActiveSheet()->setCellValue('P' . $chanpin, $row['goods_attr']);
+                $PHPExcel->getActiveSheet()->setCellValue('Q' . $chanpin, $row['goods_price']);
+                $PHPExcel->getActiveSheet()->setCellValue('R' . $chanpin, $row['goods_number']);
+                $PHPExcel->getActiveSheet()->setCellValue('S' . $chanpin, $row['formated_subtotal']);
+
+                $chanpin      = $chanpin + 1;
+            }
+
+            for ($kk = $hang; $kk < ($hang + $shuliang); $kk++) {
+                //合并单元格
+                $PHPExcel->getActiveSheet()->mergeCells('A' . $hang . ':A' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('B' . $hang . ':B' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('C' . $hang . ':C' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('D' . $hang . ':D' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('E' . $hang . ':E' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('F' . $hang . ':F' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('G' . $hang . ':G' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('H' . $hang . ':H' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('I' . $hang . ':I' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('J' . $hang . ':J' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('K' . $hang . ':K' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('L' . $hang . ':L' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('M' . $hang . ':M' . $kk);
+                $PHPExcel->getActiveSheet()->mergeCells('T' . $hang . ':T' . $kk);
+            }
+            $PHPExcel->getActiveSheet()->setCellValue('A' . ($hang), $order['order_sn']." ");//加个空格，防止时间戳被转换
+            $PHPExcel->getActiveSheet()->setCellValue('B' . ($hang), $order['order_time']);
+            $PHPExcel->getActiveSheet()->setCellValue('C' . ($hang), $order['pay_time']);
+            $PHPExcel->getActiveSheet()->setCellValue('D' . ($hang), $order['shipping_time']);
+            $PHPExcel->getActiveSheet()->setCellValue('E' . ($hang), $order['invoice_no']." ");
+            $PHPExcel->getActiveSheet()->setCellValue('F' . ($hang), $order['pay_name']);
+            $PHPExcel->getActiveSheet()->setCellValue('G' . ($hang), $order['shipping_name']);
+            $PHPExcel->getActiveSheet()->setCellValue('H' . ($hang), $order['shipping_fee'].'元');
+            $PHPExcel->getActiveSheet()->setCellValue('I' . ($hang), $order['consignee']);
+            $PHPExcel->getActiveSheet()->setCellValue('J' . ($hang), str_replace(" ","",$order['region']).$order['address']);
+            $PHPExcel->getActiveSheet()->setCellValue('K' . ($hang), $order['tel']);
+            $PHPExcel->getActiveSheet()->setCellValue('L' . ($hang), $order['mobile']);
+            $PHPExcel->getActiveSheet()->setCellValue('M' . ($hang), $order['email']);
+            $PHPExcel->getActiveSheet()->setCellValue('T' . ($hang), $order['formated_goods_amount']);
+            
+            $hang = $hang + $shuliang;
+            
+        }
+        
+        //设置单元格边框
+        $PHPExcel->getActiveSheet()->getStyle('A1:T'.$hang)->applyFromArray($styleArray);
+        //设置自动换行
+        $PHPExcel->getActiveSheet()->getStyle('A4:T'.$hang)->getAlignment()->setWrapText(true);
+        //设置字体大小
+        $PHPExcel->getActiveSheet()->getStyle('A4:T'.$hang)->getFont()->setSize(12);
+        //垂直居中
+        $PHPExcel->getActiveSheet()->getStyle('A1:T'.$hang)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        //水平居中
+        $PHPExcel->getActiveSheet()->getStyle('A1:T'.$hang)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="order_'.date('Y-m-d').'.xls"');
+        header('Cache-Control: max-age=0');
+        $Writer = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel5');
+        $Writer->save("php://output");
+        exit;
+    }
+    /* 导出订单功能结束 */
     /* 直接处理还是跳到详细页面 */
     if (($require_note && $action_note == '') || isset($show_invoice_no) || isset($show_refund))
     {
@@ -3506,24 +3774,6 @@ elseif ($_REQUEST['act'] == 'operate_post')
 
         /* 清除缓存 */
         clear_cache_files();
-
-		/* 获取用户手机号 */
-		$sql = "SELECT user_id, mobile_phone FROM " . $ecs->table('users') . " WHERE user_id='$order[user_id]' LIMIT 1";
-		$row = $db->getRow($sql);
-
-		/* 商家配货时给客户发送短信提醒 */
-		if ($_CFG['ecsdxt_order_picking'] == '1' && $row['mobile_phone'] != '')
-		{
-			require_once(ROOT_PATH . 'includes/lib_sms.php');
-
-			$smarty->assign('shop_name',	$_CFG['shop_name']);
-			$smarty->assign('order_sn',		$order['order_sn']);
-			$smarty->assign('time',			local_date($GLOBALS['_LANG']['sms_time_format']));
-
-			$content = $smarty->fetch('str:' . $_CFG['ecsdxt_order_picking_value']);
-
-			$ret = sendsms($row['mobile_phone'], $content);
-		}
     }
     /* 分单确认 */
     elseif ('split' == $operation)
@@ -4173,7 +4423,7 @@ elseif ($_REQUEST['act'] == 'operate_post')
 
 elseif ($_REQUEST['act'] == 'json')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON();
 
     $func = $_REQUEST['func'];
@@ -4228,7 +4478,7 @@ elseif ($_REQUEST['act'] == 'ajax_merge_order')
     /* 检查权限 */
     admin_priv('order_os_edit');
 
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON();
 
     $from_order_sn = empty($_POST['from_order_sn']) ? '' : json_str_iconv(substr($_POST['from_order_sn'], 1));
@@ -4273,6 +4523,11 @@ elseif ($_REQUEST['act'] == 'remove_order')
     $GLOBALS['db']->query("DELETE FROM ".$GLOBALS['ecs']->table('order_info'). " WHERE order_id = '$order_id'");
     $GLOBALS['db']->query("DELETE FROM ".$GLOBALS['ecs']->table('order_goods'). " WHERE order_id = '$order_id'");
     $GLOBALS['db']->query("DELETE FROM ".$GLOBALS['ecs']->table('order_action'). " WHERE order_id = '$order_id'");
+	/*DRP_START*/
+	$db->query("DELETE FROM ".$ecs->table('drp_log'). " WHERE order_id = '$order_id'");
+	$db->query("DELETE FROM ".$ecs->table('drp_order_info'). " WHERE order_id = '$order_id'");
+	$db->query("DELETE FROM ".$ecs->table('drp_order_goods'). " WHERE order_id = '$order_id'");
+	/*DRP_END*/
     $action_array = array('delivery', 'back');
     del_delivery($order_id, $action_array);
 
@@ -4294,7 +4549,7 @@ elseif ($_REQUEST['act'] == 'remove_order')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'search_users')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON();
 
     $id_name = empty($_GET['id_name']) ? '' : json_str_iconv(trim($_GET['id_name']));
@@ -4328,7 +4583,7 @@ elseif ($_REQUEST['act'] == 'search_users')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'search_goods')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON();
 
     $keyword = empty($_GET['keyword']) ? '' : json_str_iconv(trim($_GET['keyword']));
@@ -4576,7 +4831,7 @@ function return_user_surplus_integral_bonus($order)
  */
 function update_order_amount($order_id)
 {
-    include_once(ROOT_PATH . 'includes/lib_order.php');
+    include_once(BASE_PATH . 'helpers/order_helper.php');
     //更新订单总金额
     $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
             " SET order_amount = " . order_due_field() .
@@ -4811,7 +5066,7 @@ function operable_list($order)
         /* 如果是团购活动且未处理成功，不能发货 */
         if ($order['extension_code'] == 'group_buy')
         {
-            include_once(ROOT_PATH . 'includes/lib_goods.php');
+            include_once(BASE_PATH . 'helpers/goods_helper.php');
             $group_buy = group_buy_info(intval($order['extension_id']));
             if ($group_buy['status'] != GBS_SUCCEED)
             {
@@ -6209,7 +6464,7 @@ function package_virtual_card_shipping($goods, $order_sn)
     }
 
     /* 包含加密解密函数所在文件 */
-    include_once(ROOT_PATH . 'includes/lib_code.php');
+    include_once(BASE_PATH . 'helpers/code_helper.php');
 
     // 取出超值礼包中的虚拟商品信息
     foreach ($goods as $virtual_goods_key => $virtual_goods_value)
@@ -6370,4 +6625,25 @@ function get_site_root_url()
     return 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/' . ADMIN_PATH . '/order.php', '', PHP_SELF);
 
 }
-?>
+
+/**
+ * curl 获取
+ */
+function curlGet($url, $timeout = 5, $header = "") {
+    $defaultHeader = '$header = "User-Agent:Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12\r\n";
+        $header.="Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
+        $header.="Accept-language: zh-cn,zh;q=0.5\r\n";
+        $header.="Accept-Charset: GB2312,utf-8;q=0.7,*;q=0.7\r\n";';
+    $header = empty($header) ? $defaultHeader : $header;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);    // https请求 不验证证书和hosts
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array($header)); //模拟的header头
+    $result = curl_exec($ch);
+    curl_close($ch);
+    return $result;
+}

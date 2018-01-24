@@ -1,0 +1,12 @@
+INSERT INTO `ectwfxdb`.`ecs_sessions` (sesskey, expiry, ip, data) VALUES ('1dd4f6ad79847a92715f2605fff94790', '1495875989', '0.0.0.0', 'a:0:{}')
+
+SELECT code, value FROM `ectwfxdb`.`ecs_shop_config` WHERE parent_id > 0
+
+UPDATE `ectwfxdb`.`ecs_sessions` SET expiry = '1495875989', ip = '0.0.0.0', userid = '0', adminid = '0', user_name='0', user_rank='0', discount='0', email='0', data = 'a:0:{}' WHERE sesskey = '1dd4f6ad79847a92715f2605fff94790' LIMIT 1
+
+DELETE FROM `ectwfxdb`.`ecs_sessions_data` WHERE expiry < 1495874189
+
+SELECT userid, adminid, user_name, user_rank, discount, email, data, expiry FROM `ectwfxdb`.`ecs_sessions` WHERE sesskey = '1dd4f6ad79847a92715f2605fff94790'
+
+SELECT code, value FROM `ectwfxdb`.`ecs_shop_config` WHERE parent_id > 0
+

@@ -13,7 +13,7 @@
  * $Id: articlecat.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 $exc = new exchange($ecs->table("article_cat"), $db, 'cat_id', 'cat_name');
@@ -235,7 +235,7 @@ elseif ($_REQUEST['act'] == 'update')
         }
     }
 
-    $dat = $db->getOne("SELECT cat_name, show_in_nav FROM ". $ecs->table('article_cat') . " WHERE cat_id = '" . $_POST['id'] . "'");
+    $dat = $db->GetRow("SELECT cat_name, show_in_nav FROM ". $ecs->table('article_cat') . " WHERE cat_id = '" . $_POST['id'] . "'");
     if ($exc->edit("cat_name = '$_POST[cat_name]', cat_desc ='$_POST[cat_desc]', keywords='$_POST[keywords]',parent_id = '$_POST[parent_id]', cat_type='$cat_type', sort_order='$_POST[sort_order]', show_in_nav = '$_POST[show_in_nav]'",  $_POST['id']))
     {
         if($_POST['cat_name'] != $dat['cat_name'])

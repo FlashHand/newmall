@@ -13,7 +13,7 @@
  * $Id: privilege.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -69,7 +69,7 @@ elseif ($_REQUEST['act'] == 'signin')
 {
     if (intval($_CFG['captcha']) & CAPTCHA_ADMIN)
     {
-        include_once(ROOT_PATH . 'includes/cls_captcha.php');
+        // include_once(ROOT_PATH . 'includes/cls_captcha.php');
 
         /* 检查验证码是否正确 */
         $validator = new captcha();
@@ -565,7 +565,7 @@ elseif ($_REQUEST['act'] == 'modif')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'allot')
 {
-    include_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/priv_action.php');
+    include_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/priv_action.php');
 
     admin_priv('allot_priv');
     if ($_SESSION['admin_id'] == $_GET['id'])

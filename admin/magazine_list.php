@@ -13,7 +13,7 @@
  * $Id: magazine_list.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 require(dirname(__FILE__) . '/includes/init.php');
 admin_priv('magazine_list');
 if ($_REQUEST['act'] == 'list')
@@ -58,7 +58,7 @@ elseif ($_REQUEST['act'] == 'add')
 {
     if (empty($_POST['step']))
     {
-        include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
+        // include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
         $smarty->assign('action_link', array('text' => $_LANG['go_list'], 'href' => 'magazine_list.php?act=list'));
         $smarty->assign(array('ur_here'=>$_LANG['magazine_list'],'act'=>'add'));
         create_html_editor('magazine_content');
@@ -80,7 +80,7 @@ elseif ($_REQUEST['act'] == 'add')
 }
 elseif ($_REQUEST['act'] == 'edit')
 {
-    include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
+    // include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
     $id = intval($_REQUEST['id']);
     if (empty($_POST['step']))
     {

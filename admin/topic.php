@@ -13,7 +13,7 @@
  * $Id: topic.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -72,7 +72,7 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
     $smarty->assign('isadd', $isadd);
     $topic_id  = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
-    include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
+    // include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
 
     $smarty->assign('ur_here',     $_LANG['09_topic']);
     $smarty->assign('action_link', list_link($isadd));
@@ -101,7 +101,7 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
 
         create_html_editor('topic_intro', $topic['intro']);
 
-        require(ROOT_PATH . 'includes/cls_json.php');
+        // require(ROOT_PATH . 'includes/cls_json.php');
 
         $json          = new JSON;
         $topic['data'] = addcslashes($topic['data'], "'");
@@ -166,12 +166,13 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 {
                     $name .= chr(mt_rand(97, 122));
                 }
-                $name .= '.' . end(explode('.', $_FILES['topic_img']['name']));
-                $target = ROOT_PATH . DATA_DIR . '/afficheimg/' . $name;
+                $topic_img_name = explode('.', $_FILES['topic_img']['name']);
+                $name .= '.' . end($topic_img_name);
+                $target = ROOT_PATH . DATA_DIR . '/attached/afficheimg/' . $name;
 
-                if (move_upload_file($_FILES['topic_img']['tmp_name'], $target))
+                if (ecmoban_move_upload_file($_FILES['topic_img'], $target))
                 {
-                    $topic_img = DATA_DIR . '/afficheimg/' . $name;
+                    $topic_img = DATA_DIR . '/attached/afficheimg/' . $name;
                 }
             }
             else if (!empty($_REQUEST['url']))
@@ -217,12 +218,13 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         {
             $name .= chr(mt_rand(97, 122));
         }
-        $name .= '.' . end(explode('.', $_FILES['title_pic']['name']));
-        $target = ROOT_PATH . DATA_DIR . '/afficheimg/' . $name;
+        $title_pic_name = explode('.', $_FILES['title_pic']['name']);
+        $name .= '.' . end($title_pic_name);
+        $target = ROOT_PATH . DATA_DIR . '/attached/afficheimg/' . $name;
 
-        if (move_upload_file($_FILES['title_pic']['tmp_name'], $target))
+        if (ecmoban_move_upload_file($_FILES['title_pic'], $target))
         {
-            $title_pic = DATA_DIR . '/afficheimg/' . $name;
+            $title_pic = DATA_DIR . '/attached/afficheimg/' . $name;
         }
     }
     else if (!empty($_REQUEST['title_url']))
@@ -241,7 +243,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
     $title_pic = empty($title_pic) ? $_POST['title_img_url'] : $title_pic;
 
-    require(ROOT_PATH . 'includes/cls_json.php');
+    // require(ROOT_PATH . 'includes/cls_json.php');
 
     $start_time = local_strtotime($_POST['start_time']);
     $end_time   = local_strtotime($_POST['end_time']);
@@ -274,7 +276,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 }
 elseif ($_REQUEST['act'] == 'get_goods_list')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
 
     $filters = $json->decode($_GET['JSON']);
@@ -464,9 +466,9 @@ function get_url_image($url)
         $name .= chr(mt_rand(97, 122));
     }
     $name .= '.' . $ext;
-    $target = ROOT_PATH . DATA_DIR . '/afficheimg/' . $name;
+    $target = ROOT_PATH . DATA_DIR . '/attached/afficheimg/' . $name;
 
-    $tmp_file = DATA_DIR . '/afficheimg/' . $name;
+    $tmp_file = DATA_DIR . '/attached/afficheimg/' . $name;
     $filename = ROOT_PATH . $tmp_file;
 
     $img = file_get_contents($url);

@@ -13,11 +13,11 @@
  * $Id: order_stats.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . 'includes/lib_order.php');
-require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/statistic.php');
+require_once(BASE_PATH . 'helpers/order_helper.php');
+require_once(BASE_PATH . 'languages/' .$_CFG['lang']. '/admin/statistic.php');
 
 $smarty->assign('lang', $_LANG);
 
@@ -370,7 +370,7 @@ elseif ($act = 'download')
         $data .= $val['order_num'] . "\t";
     }
 
-    echo ecs_iconv(EC_CHARSET, 'GB2312', $data) . "\t";
+    echo ecs_iconv(CHARSET, 'GB2312', $data) . "\t";
     exit;
 
 }
@@ -409,7 +409,7 @@ elseif ($act = 'download')
 
     /* 无效或已取消订单数 */
     $sql = "SELECT COUNT(*) AS invalid_num FROM " .$GLOBALS['ecs']->table('order_info').
-           " WHERE order_status > '" .OS_CONFIRMED. "'".
+           " WHERE order_status > '" .OS_CONFIRMED. "' AND order_status < '".OS_RETURNED."'  ".
            " AND add_time >= '$start_date' AND add_time < '" . ($end_date + 86400) . "'";
     $order_info['invalid_num'] = $GLOBALS['db']->getOne($sql);
     return $order_info;

@@ -1,7 +1,6 @@
 <!-- $Id: order_info.htm 17060 2010-03-25 03:44:42Z liuhui $ -->
 
 {include file="pageheader.htm"}
- <script src="js/transport.js"></script> 
 {insert_scripts files="topbar.js,../js/utils.js,listtable.js,selectzone.js,../js/common.js"}
 {if $user}
 <div id="topbar">
@@ -55,7 +54,7 @@
     </tr>
     <tr>
       <td> {$lang.mobile} </td>
-      <td> <a href="sms.php?act=display_send_ui&mobile={$address.mobile} ">{$address.mobile|escape}</a> </td>
+      <td> {$address.mobile|escape} </td>
     </tr>
   </table>
   {/foreach}
@@ -97,27 +96,19 @@
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_shipping}</strong></div></td>
-    <td>{if $exist_real_goods}{if $order.shipping_id > 0}<span id="shipping_name">{$order.shipping_name}</span>{else}{$lang.require_field}{/if}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="special">{$lang.edit}</a>&nbsp;&nbsp;<input type="button" onclick="window.open('order.php?act=info&order_id={$order.order_id}&shipping_print=1')" class="button" value="{$lang.print_shipping}"> {if $order.insure_fee > 0}（{$lang.label_insure_fee}{$order.formated_insure_fee}）{/if}{/if}</td>
+    <td>{if $exist_real_goods}{if $order.shipping_id > 0}{$order.shipping_name}{else}{$lang.require_field}{/if}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="special">{$lang.edit}</a>&nbsp;&nbsp;<input type="button" onclick="window.open('order.php?act=info&order_id={$order.order_id}&shipping_print=1')" class="button" value="{$lang.print_shipping}"> {if $order.insure_fee > 0}（{$lang.label_insure_fee}{$order.formated_insure_fee}）{/if}{/if}</td>
     <td><div align="right"><strong>{$lang.label_shipping_time}</strong></div></td>
     <td>{$order.shipping_time}</td>
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_invoice_no}</strong></div></td>
-    <td>{if $order.shipping_id>0 and $order.shipping_status>0}<span>{if $order.invoice_no}<span id="invoice_no">{$order.invoice_no}</span>{else}N/A{/if}</span><a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="special">{$lang.edit}</a>{/if}</td>
+    <td>{if $order.shipping_id>0 and $order.shipping_status>0}<span>{if $order.invoice_no}{$order.invoice_no}{else}N/A{/if}</span><a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="special">{$lang.edit}</a>{/if}</td>
     <td><div align="right"><strong>{$lang.from_order}</strong></div></td>
     <td>{$order.referer}</td>
   </tr>
-{if $order.invoice_no and $order.shipping_time neq '未发货'}
-  <tr>
-    <th colspan="4">物流信息跟踪</th>
-  </tr>
-  <tr>
-    <td colspan="4"><div id="retData"></div></td>
-  </tr>
-{/if}
   <tr>
     <th colspan="4">{$lang.other_info}<a href="order.php?act=edit&order_id={$order.order_id}&step=other" class="special">{$lang.edit}</a></th>
-  </tr>
+    </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_inv_type}</strong></div></td>
     <td>{$order.inv_type}</td>
@@ -173,7 +164,7 @@
     <td><div align="right"><strong>{$lang.label_tel}</strong></div></td>
     <td>{$order.tel}</td>
     <td><div align="right"><strong>{$lang.label_mobile}</strong></div></td>
-    <td><a href="sms.php?act=display_send_ui&mobile={$order.mobile} "><font color="red">{$order.mobile|escape}</font></a></td>
+    <td>{$order.mobile|escape}</td>
   </tr>
   <tr>
     <td><div align="right"><strong>{$lang.label_sign_building}</strong></div></td>
@@ -203,14 +194,14 @@
   <tr>
     <td>
     {if $goods.goods_id gt 0 && $goods.extension_code neq 'package_buy'}
-    <a href="../goods.php?id={$goods.goods_id}" target="_blank">{$goods.goods_name} {if $goods.brand_name}[ {$goods.brand_name} ]{/if}
+    <a href="../index.php?c=goods&id={$goods.goods_id}" target="_blank">{$goods.goods_name} {if $goods.brand_name}[ {$goods.brand_name} ]{/if}
     {if $goods.is_gift}{if $goods.goods_price > 0}{$lang.remark_favourable}{else}{$lang.remark_gift}{/if}{/if}
     {if $goods.parent_id > 0}{$lang.remark_fittings}{/if}</a>
     {elseif $goods.goods_id gt 0 && $goods.extension_code eq 'package_buy'}
     <a href="javascript:void(0)" onclick="setSuitShow({$goods.goods_id})">{$goods.goods_name}<span style="color:#FF0000;">{$lang.remark_package}</span></a>
     <div id="suit_{$goods.goods_id}" style="display:none">
         {foreach from=$goods.package_goods_list item=package_goods_list}
-          <a href="../goods.php?id={$package_goods_list.goods_id}" target="_blank">{$package_goods_list.goods_name}</a><br />
+          <a href="../index.php?c=goods&id={$package_goods_list.goods_id}" target="_blank">{$package_goods_list.goods_name}</a><br />
         {/foreach}
     </div>
     {/if}
@@ -370,12 +361,6 @@
     }
     return true;
   }
-</script>
-<script language="javascript">
-  document.getElementById("retData").innerHTML="<center>正在查询物流信息，请稍后...</center>";
-  var expressid = document.getElementById("shipping_name").innerHTML;
-  var expressno = document.getElementById("invoice_no").innerHTML;
-  Ajax.call('/plugins/kuaidi100/kuaidi100_post.php?com='+ expressid+'&nu=' + expressno,'showtest=showtest', function(data){document.getElementById("retData").innerHTML=data;}, 'GET', 'TEXT');
 </script>
 {/literal}
 

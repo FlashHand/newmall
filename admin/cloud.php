@@ -13,20 +13,20 @@
  * $Id: cloud.php 17063 2011-07-25 06:35:46Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require(ROOT_PATH . 'includes/cls_transport.php');
-require(ROOT_PATH . 'includes/cls_json.php');
+// require(ROOT_PATH . 'includes/cls_transport.php');
+// require(ROOT_PATH . 'includes/cls_json.php');
 
-require(ROOT_PATH . 'includes/shopex_json.php');
+// require(ROOT_PATH . 'includes/shopex_json.php');
 
 $data['api_ver'] = '1.0';
 $data['version'] = VERSION;
 $data['patch'] = file_get_contents(ROOT_PATH.ADMIN_PATH."/patch_num");
 $data['ecs_lang'] = $_CFG['lang'];
 $data['release'] = RELEASE;
-$data['charset'] = strtoupper(EC_CHARSET);
+$data['charset'] = strtoupper(CHARSET);
 $data['certificate_id'] = $_CFG['certificate_id'];
 $data['token'] = md5($_CFG['token']);
 $data['certi'] = $_CFG['certi'];
@@ -35,7 +35,7 @@ $data['mysql_ver'] = $db->version();
 $data['shop_url'] = urlencode($ecs->url());
 $data['admin_url'] = urlencode($ecs->url().ADMIN_PATH);
 $data['sess_id'] = $GLOBALS['sess']->get_session_id();
-$data['stamp'] = mktime();
+$data['stamp'] = time();
 $data['ent_id'] = $_CFG['ent_id'];
 $data['ent_ac'] = $_CFG['ent_ac'];
 $data['ent_sign'] = $_CFG['ent_sign'];
@@ -57,7 +57,7 @@ if($act =='menu_api')
     {
         $t = new transport;
        $apiget = "ver= $data[version] &ecs_lang= $data[ecs_lang] &charset= $data[charset]&ent_id=$data[ent_id]& certificate_id=$data[certificate_id]";
-        $api_comment = $t->request('http://cloud.ecshop.com/menu_api.php', $apiget);
+        $api_comment = $t->request('http://cloud.ectouch.cn/menu_api.php', $apiget);
         $api_str = $api_comment["body"];
         if (!empty($api_str))
         {
@@ -97,9 +97,9 @@ elseif($act == 'cloud_remind')
     {
         $t = new transport('-1',5);
         $apiget = "ver=$data[version]&ecs_lang=$data[ecs_lang]&charset=$data[charset]&certificate_id=$data[certificate_id]&ent_id=$data[ent_id]";
-        $api_comment = $t->request('http://cloud.ecshop.com/cloud_remind.php', $apiget);
+        $api_comment = $t->request('http://cloud.ectouch.cn/cloud_remind.php', $apiget);
         $api_str=    $api_comment["body"];
-        $json = new Services_JSON;
+        $json = new JSON;
         $api_arr = @$json->decode($api_str,1);
         if(!empty($api_str))
         {
@@ -137,7 +137,7 @@ elseif($act == 'close_remind')
     $remind_id=$_REQUEST['remind_id'];
     $t = new transport('-1',5);
     $apiget = "ver= $data[version] &ecs_lang= $data[ecs_lang] &charset= $data[charset] &certificate_id=$data[certificate_id]&ent_id=$data[ent_id]&remind_id=$remind_id";
-    $api_comment = $t->request('http://cloud.ecshop.com/cloud_remind.php', $apiget);
+    $api_comment = $t->request('http://cloud.ectouch.cn/cloud_remind.php', $apiget);
 
     $api_str = $api_comment["body"];
     $json = new Services_JSON;
@@ -155,7 +155,7 @@ elseif($act == 'close_remind')
             if (admin_priv('all','',false))
             {
                 $apiget.="&act=close_remind&ent_ac=$data[ent_ac]";
-                $result=$t->request('http://cloud.ecshop.com/cloud_remind.php', $apiget);
+                $result=$t->request('http://cloud.ectouch.cn/cloud_remind.php', $apiget);
                 $api_str = $result["body"];
                 //var_dump($api_str);
                 $api_arr = array();
@@ -225,7 +225,7 @@ else
     {
         $query .= '&'.$v.'='.$data[$v];
     }
-    ecs_header("Location: http://cloud.ecshop.com/api.php?act=".$act.$query."\n");
+    ecs_header("Location: http://cloud.ectouch.cn/api.php?act=".$act.$query."\n");
     exit();
 }
 

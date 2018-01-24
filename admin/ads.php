@@ -13,11 +13,11 @@
  * $Id: ads.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-include_once(ROOT_PATH . 'includes/cls_image.php');
-$image = new cls_image($_CFG['bgcolor']);
+// include_once(ROOT_PATH . 'includes/cls_image.php');
+$image = new image($_CFG['bgcolor']);
 $exc   = new exchange($ecs->table("ad"), $db, 'ad_id', 'ad_name');
 $allow_suffix = array('gif', 'jpg', 'png', 'jpeg', 'bmp','swf');
 /* act操作项的初始化 */
@@ -174,11 +174,10 @@ elseif ($_REQUEST['act'] == 'insert')
                 $urlstr .= chr(mt_rand(97, 122));
             }
 
-            $source_file = $_FILES['upfile_flash']['tmp_name'];
-            $target      = ROOT_PATH . DATA_DIR . '/afficheimg/';
+            $target      = ROOT_PATH . DATA_DIR . '/attached/afficheimg/';
             $file_name   = $urlstr .'.swf';
 
-            if (!move_upload_file($source_file, $target.$file_name))
+            if (!ecmoban_move_upload_file($_FILES['upfile_flash'], $target.$file_name))
             {
                 $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
                 sys_msg($_LANG['upfile_error'], 0, $link);
@@ -287,7 +286,7 @@ elseif ($_REQUEST['act'] == 'edit')
     {
         if (strpos($ads_arr['ad_code'], 'http://') === false && strpos($ads_arr['ad_code'], 'https://') === false)
         {
-            $src = '../' . DATA_DIR . '/afficheimg/'. $ads_arr['ad_code'];
+            $src = '../' . DATA_DIR . '/attached/afficheimg/'. $ads_arr['ad_code'];
             $smarty->assign('img_src', $src);
         }
         else
@@ -300,7 +299,7 @@ elseif ($_REQUEST['act'] == 'edit')
     {
         if (strpos($ads_arr['ad_code'], 'http://') === false && strpos($ads_arr['ad_code'], 'https://') === false)
         {
-            $src = '../' . DATA_DIR . '/afficheimg/'. $ads_arr['ad_code'];
+            $src = '../' . DATA_DIR . '/attached/afficheimg/'. $ads_arr['ad_code'];
             $smarty->assign('flash_url', $src);
         }
         else
@@ -398,11 +397,10 @@ elseif ($_REQUEST['act'] == 'update')
                 $urlstr .= chr(mt_rand(97, 122));
             }
 
-            $source_file = $_FILES['upfile_flash']['tmp_name'];
-            $target      = ROOT_PATH . DATA_DIR . '/afficheimg/';
+            $target      = ROOT_PATH . DATA_DIR . '/attached/afficheimg/';
             $file_name   = $urlstr .'.swf';
 
-            if (!move_upload_file($source_file, $target.$file_name))
+            if (!ecmoban_move_upload_file($_FILES['upfile_flash'], $target.$file_name))
             {
                 $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
                 sys_msg($_LANG['upfile_error'], 0, $link);
@@ -440,7 +438,7 @@ elseif ($_REQUEST['act'] == 'update')
         $ad_code = "ad_code = '$_POST[ad_text]', ";
     }
 
-    $ad_code = str_replace('../' . DATA_DIR . '/afficheimg/', '', $ad_code);
+    $ad_code = str_replace('../' . DATA_DIR . '/attached/afficheimg/', '', $ad_code);
     /* 更新信息 */
     $sql = "UPDATE " .$ecs->table('ad'). " SET ".
             "position_id = '$_POST[position_id]', ".
@@ -540,7 +538,7 @@ elseif ($_REQUEST['act'] == 'remove')
     if ((strpos($img, 'http://') === false) && (strpos($img, 'https://') === false) && get_file_suffix($img, $allow_suffix))
     {
         $img_name = basename($img);
-        @unlink(ROOT_PATH. DATA_DIR . '/afficheimg/'.$img_name);
+        @unlink(ROOT_PATH. DATA_DIR . '/attached/afficheimg/'.$img_name);
     }
 
     admin_log('', 'remove', 'ads');

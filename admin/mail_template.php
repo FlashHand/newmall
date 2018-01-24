@@ -13,7 +13,7 @@
  * $Id: mail_template.php 17063 2010-03-25 06:35:46Z liuhui $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -24,7 +24,7 @@ admin_priv('mail_template');
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
-    include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
+    // include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
 
     /* 包含插件语言项 */
     $sql = "SELECT code FROM ".$ecs->table('plugins');
@@ -62,14 +62,17 @@ if ($_REQUEST['act'] == 'list')
     $content = load_template($cur);
 
     /* 创建 html editor */
-    $editor = new FCKeditor('content');
-    $editor->BasePath   = '../includes/fckeditor/';
-    $editor->ToolbarSet = 'Normal';
-    $editor->Width      = '100%';
-    $editor->Height     = '320';
-    $editor->Value      = $content['template_content'];
-    $FCKeditor = $editor->CreateHtml();
-    $smarty->assign('FCKeditor', $FCKeditor);
+    // $editor = new FCKeditor('content');
+    // $editor->BasePath   = '../includes/fckeditor/';
+    // $editor->ToolbarSet = 'Normal';
+    // $editor->Width      = '100%';
+    // $editor->Height     = '320';
+    // $editor->Value      = $content['template_content'];
+    // $FCKeditor = $editor->CreateHtml();
+
+    //$smarty->assign('FCKeditor', $FCKeditor);
+
+    create_html_editor('content', $content['template_content']);
     $smarty->assign('tpl', $cur);
     $smarty->assign('cur',          $cur);
     $smarty->assign('ur_here',      $_LANG['mail_template_manage']);
@@ -84,7 +87,7 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'loat_template')
 {
-    include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
+    // include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
 
     $tpl = intval($_GET['tpl']);
     $mail_type = isset($_GET['mail_type']) ? $_GET['mail_type'] : -1;
@@ -168,7 +171,7 @@ elseif ($_REQUEST['act'] == 'save_template')
         $content = trim($_POST['content']);
     }
 
-    $type   = intval($_POST['is_html']);
+    $type   = intval($_POST['mail_type']);
     $tpl_id = intval($_POST['tpl']);
 
 

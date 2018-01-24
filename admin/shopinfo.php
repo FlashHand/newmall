@@ -13,10 +13,10 @@
  * $Id: shopinfo.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
+// require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 
 $exc = new exchange($ecs->table("article"), $db, 'article_id', 'title');
 
@@ -51,6 +51,7 @@ if ($_REQUEST['act'] =='add')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
+    $_REQUEST['id'] = intval($_REQUEST['id']);
 
     /* 创建 html editor */
     create_html_editor('FCKeditor1');
@@ -70,17 +71,20 @@ if ($_REQUEST['act'] == 'insert')
     /* 权限判断 */
     admin_priv('shopinfo_manage');
 
+    $_REQUEST['id'] = intval($_REQUEST['id']);
+    $title = trim(addslashes($_POST['title']));
+
     /* 判断是否重名 */
-    $is_only = $exc->is_only('title', $_POST['title']);
+    $is_only = $exc->is_only('title', $title);
 
     if (!$is_only)
     {
-        sys_msg(sprintf($_LANG['title_exist'], stripslashes($_POST['title'])), 1);
+        sys_msg(sprintf($_LANG['title_exist'], stripslashes($title)), 1);
     }
-
+    $FCKeditor1 = trim(addslashes($_POST['FCKeditor1']));
     /* 插入数据 */
     $add_time = gmtime();
-    $sql = "INSERT INTO ".$ecs->table('article')."(title, cat_id, content, add_time) VALUES('$_POST[title]', '0', '$_POST[FCKeditor1]','$add_time' )";
+    $sql = "INSERT INTO ".$ecs->table('article')."(title, cat_id, content, add_time) VALUES('$title', '0', '$FCKeditor1','$add_time' )";
     $db->query($sql);
 
     $link[0]['text'] = $_LANG['continue_add'];
@@ -92,7 +96,7 @@ if ($_REQUEST['act'] == 'insert')
     /* 清除缓存 */
     clear_cache_files();
 
-    admin_log($_POST['title'], 'add', 'shopinfo');
+    admin_log($title, 'add', 'shopinfo');
     sys_msg($_LANG['articleadd_succeed'],0, $link);
 }
 
@@ -103,9 +107,10 @@ if ($_REQUEST['act'] == 'edit')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
+    $id = intval($_REQUEST['id']);
 
     /* 取得文章数据 */
-    $sql = "SELECT article_id, title, content FROM ".$ecs->table('article')."WHERE article_id =".$_REQUEST['id'];
+    $sql = "SELECT article_id, title, content FROM ".$ecs->table('article')."WHERE article_id =".$id;
     $article = $db->GetRow($sql);
 
     /* 创建 html editor */
@@ -121,21 +126,22 @@ if ($_REQUEST['act'] == 'update')
 {
     /* 权限判断 */
     admin_priv('shopinfo_manage');
-
+    $title = trim(addslashes($_POST['title']));
+    $id = intval($_REQUEST['id']);
     /* 检查重名 */
     if ($_POST['title'] != $_POST['old_title'])
     {
-        $is_only = $exc->is_only('title', $_POST['title'], $_POST['id']);
+        $is_only = $exc->is_only('title', $title, $id);
 
         if (!$is_only)
         {
-            sys_msg(sprintf($_LANG['title_exist'], stripslashes($_POST['title'])), 1);
+            sys_msg(sprintf($_LANG['title_exist'], stripslashes($title)), 1);
         }
     }
-
+    $FCKeditor1 = trim(addslashes($_POST['FCKeditor1']));
     /* 更新数据 */
     $cur_time = gmtime();
-    if ($exc->edit("title='$_POST[title]', content='$_POST[FCKeditor1]',add_time ='$cur_time'",$_POST['id']))
+    if ($exc->edit("title='$title', content='$FCKeditor1',add_time ='$cur_time'",$id))
     {
         /* 清除缓存 */
         clear_cache_files();
@@ -143,8 +149,8 @@ if ($_REQUEST['act'] == 'update')
         $link[0]['text'] = $_LANG['back_list'];
         $link[0]['href'] = 'shopinfo.php?act=list';
 
-        sys_msg(sprintf($_LANG['articleedit_succeed'], $_POST['title']), 0, $link);
-        admin_log($_POST['title'], 'edit', 'shopinfo');
+        sys_msg(sprintf($_LANG['articleedit_succeed'], $title), 0, $link);
+        admin_log($title, 'edit', 'shopinfo');
     }
 }
 
@@ -155,8 +161,8 @@ elseif ($_REQUEST['act'] == 'edit_title')
 {
     check_authz_json('shopinfo_manage');
 
-    $id    = intval($_POST['id']);
-    $title = json_str_iconv(trim($_POST['val']));
+    $id    = intval($_REQUEST['id']);
+    $title = json_str_iconv(trim(addslashes($_POST['val'])));
 
     /* 检查文章标题是否有重名 */
     if ($exc->num('title', $title, $id) == 0)
@@ -181,7 +187,7 @@ elseif ($_REQUEST['act'] == 'remove')
 {
     check_authz_json('shopinfo_manage');
 
-    $id = intval($_GET['id']);
+    $id = intval($_REQUEST['id']);
 
     /* 获得文章主题 */
     $title = $exc->get_name($id);

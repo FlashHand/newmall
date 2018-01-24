@@ -13,7 +13,7 @@
  * $Id: shop_config.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 /* 代码 */
 require(dirname(__FILE__) . '/includes/init.php');
@@ -29,9 +29,9 @@ else
 
 $sess_id = $GLOBALS['sess']->get_session_id();
 
-$auth = mktime();
+$auth = time();
 $ac = md5($certi_id.'SHOPEX_SMS'.$auth);
-$url = 'http://service.shopex.cn/sms/index.php?certificate_id='.$certi_id.'&sess_id='.$sess_id.'&auth='.$auth.'&ac='.$ac;
+$url = 'http://service.ectouch.cn/sms/index.php?certificate_id='.$certi_id.'&sess_id='.$sess_id.'&auth='.$auth.'&ac='.$ac;
 
 /*------------------------------------------------------ */
 //-- 列表编辑 ?act=list_edit
@@ -42,11 +42,11 @@ if ($_REQUEST['act'] == 'list_edit')
     admin_priv('shop_config');
 
     /* 可选语言 */
-    $dir = opendir('../languages');
+    $dir = opendir('../include/languages');
     $lang_list = array();
     while (@$file = readdir($dir))
     {
-        if ($file != '.' && $file != '..' &&  $file != '.svn' && $file != '_svn' && is_dir('../languages/' .$file))
+        if ($file != '.' && $file != '..' &&  $file != '.svn' && $file != '_svn' && is_dir('../include/languages/' .$file))
         {
             $lang_list[] = $file;
         }
@@ -161,7 +161,8 @@ elseif ($_REQUEST['act'] == 'post')
                 }
                 elseif ($code == 'watermark')
                 {
-                    $ext = array_pop(explode('.', $file['name']));
+                    $ext_arr = explode('.', $file['name']);
+                    $ext = array_pop($ext_arr);
                     $file_name = $file_var_list[$code]['store_dir'] . 'watermark.' . $ext;
                     if (file_exists($file_var_list[$code]['value']))
                     {
@@ -170,7 +171,8 @@ elseif ($_REQUEST['act'] == 'post')
                 }
                 elseif($code == 'wap_logo')
                 {
-                    $ext = array_pop(explode('.', $file['name']));
+                    $ext_arr = explode('.', $file['name']);
+                    $ext = array_pop($ext_arr);
                     $file_name = $file_var_list[$code]['store_dir'] . 'wap_logo.' . $ext;
                     if (file_exists($file_var_list[$code]['value']))
                     {
@@ -183,7 +185,7 @@ elseif ($_REQUEST['act'] == 'post')
                 }
 
                 /* 判断是否上传成功 */
-                if (move_upload_file($file['tmp_name'], $file_name))
+                if (ecmoban_move_upload_file($file, $file_name))
                 {
                     $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '$file_name' WHERE code = '$code'";
                     $db->query($sql);
@@ -228,7 +230,7 @@ elseif ($_REQUEST['act'] == 'post')
     $shop_province  = $db->getOne("SELECT region_name FROM ".$ecs->table('region')." WHERE region_id='$_CFG[shop_province]'");
     $shop_city      = $db->getOne("SELECT region_name FROM ".$ecs->table('region')." WHERE region_id='$_CFG[shop_city]'");
 
-    $spt = '<script type="text/javascript" src="http://api.ecshop.com/record.php?';
+    $spt = '<script type="text/javascript" src="http://api.ectouch.cn/record.php?';
     $spt .= "url=" .urlencode($ecs->url());
     $spt .= "&shop_name=" .urlencode($_CFG['shop_name']);
     $spt .= "&shop_title=".urlencode($_CFG['shop_title']);
@@ -239,7 +241,7 @@ elseif ($_REQUEST['act'] == 'post')
     $spt .= "&qq=$_CFG[qq]&ww=$_CFG[ww]&ym=$_CFG[ym]&msn=$_CFG[msn]";
     $spt .= "&email=$_CFG[service_email]&phone=$_CFG[service_phone]&icp=".urlencode($_CFG['icp_number']);
     $spt .= "&version=".VERSION."&language=$_CFG[lang]&php_ver=" .PHP_VERSION. "&mysql_ver=" .$db->version();
-    $spt .= "&charset=".EC_CHARSET;
+    $spt .= "&charset=".CHARSET;
     $spt .= '"></script>';
 
     if ($type == 'mail_setting')

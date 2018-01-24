@@ -13,7 +13,7 @@
  * $Id: user_msg.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 /* 权限判断 */
@@ -75,7 +75,7 @@ if ($_REQUEST['act'] == 'remove_msg')
         {
             if ($row['message_img'])
             {
-                @unlink(ROOT_PATH. DATA_DIR . '/feedbackimg/' . $row['message_img']);
+                @unlink(ROOT_PATH. DATA_DIR . '/attached/feedbackimg/' . $row['message_img']);
             }
             $sql = "DELETE FROM " . $ecs->table('feedback') . " WHERE msg_id=$msg_id LIMIT 1";
             $db->query($sql);
@@ -169,7 +169,7 @@ elseif ($_REQUEST['act'] == 'remove')
         /* 删除图片 */
         if (!empty($img))
         {
-             @unlink(ROOT_PATH. DATA_DIR . '/feedbackimg/'.$img);
+             @unlink(ROOT_PATH. DATA_DIR . '/attached/feedbackimg/'.$img);
         }
         $sql = "DELETE FROM " . $ecs->table('feedback') . " WHERE parent_id = '$msg_id' LIMIT 1";
         $db->query($sql, 'SILENT');
@@ -256,7 +256,7 @@ elseif ($_REQUEST['act']=='action')
     }
     else
     {
-        $sql = "UPDATE ".$ecs->table('feedback')." SET user_email = '".$_POST['user_email']."', msg_content='".$_POST['msg_content']."', msg_time = '".gmtime()."' WHERE msg_id = '".$_REQUEST['parent_id']."'";
+        $sql = "UPDATE ".$ecs->table('feedback')." SET user_name = '".$_SESSION['admin_name']."', user_email = '".$_POST['user_email']."', msg_content='".$_POST['msg_content']."', msg_time = '".gmtime()."' WHERE msg_id = '".$_REQUEST['parent_id']."'";
         $db->query($sql);
     }
 
@@ -305,7 +305,7 @@ elseif ($_REQUEST['act'] == 'drop_file')
     /* 删除上传的文件 */
     $file = $_GET['file'];
     $file = str_replace('/','',$file);
-    @unlink('../' . DATA_DIR . '/feedbackimg/'.$file);
+    @unlink('../' . DATA_DIR . '/attached/feedbackimg/'.$file);
 
     /* 更新数据库 */
     $db->query("UPDATE ".$ecs->table('feedback')." SET message_img = '' WHERE msg_id = '$_GET[id]'");

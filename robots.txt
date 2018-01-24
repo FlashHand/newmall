@@ -1,19 +1,8 @@
 User-agent: *
-Disallow: /cert/
-Disallow: /data/
-Disallow: /includes/
-Disallow: /install/
-Disallow: /languages/
-Disallow: /plugins/
-Disallow: /templates/
-Disallow: /themes/
-Disallow: /upgrade/
-Disallow: /api/
-Disallow: /temp/
-Disallow: /js/
-Disallow: /zt/
-Disallow: /ErrorFiles/
-Disallow: /nbproject/
-Disallow: /mobile/
-Disallow:/*.php$
 
+Disallow: /admin/
+Disallow: /api/
+Disallow: /data/
+Disallow: /include/
+Disallow: /plugins/
+Disallow: /themes/

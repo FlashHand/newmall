@@ -1,14 +1,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<div class="box">
- <div class="box_1">
-  <h3><span>{$lang.new_price}</span></h3>
-  <div class="boxCenterList RelaArticle">
-    <ul class="clearfix">
-    <!--{foreach from=$price_list item=item}-->
-    <li>{$item.user_name}&nbsp;&nbsp;{$item.bid_price}</li>
-    <!--{/foreach}-->
+<div class="tab-content">
+  <div class="tab-msg">
+    <ul class="msg">
+      <!--{foreach from=$price_list item=item}-->
+      <li>
+        <p><span class="pull-left">{$item.user_name}</span><span class="pull-right">{$item.bid_price}</span></p>
+      </li>
+      <!-- {/foreach} -->
     </ul>
   </div>
- </div>
 </div>
-<div class="blank5"></div>

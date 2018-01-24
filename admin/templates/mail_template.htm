@@ -4,12 +4,12 @@
 {include file="pageheader.htm"}
 {insert_scripts files="../js/utils.js,listtable.js"}
 
-<div class="form-div" id="conent_area">
+<div class="main-div" id="conent_area">
 
 {/if}
 <form method="post" name="theForm" action="mail_template.php?act=save_template">
 
-  <table id="general-table" align="center">
+  <table id="general-table" cellspacing="1" align="center">
   <tr>
     <td style="font-weight: bold; " width="15%">{$lang.select_template}</td>
     <td>
@@ -33,7 +33,7 @@
   </tr>
   <tr>
     <td colspan="2">{if $template.is_html eq '1'}
-                      {$FCKeditor}
+                      {$fckeditor}
                     {else}
                       <textarea name="content" id="content" style="width:90%" rows="16" >{$template.template_content}</textarea>
                     {/if}</td>

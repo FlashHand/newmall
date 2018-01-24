@@ -13,13 +13,11 @@
  * $Id: category.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-include_once (ROOT_PATH . 'includes/cls_image.php');
-$image = new cls_image($_CFG['bgcolor']);
 $exc = new exchange($ecs->table("category"), $db, 'cat_id', 'cat_name');
-
+$image = new image($_CFG['bgcolor']);
 /* act操作项的初始化 */
 if (empty($_REQUEST['act']))
 {
@@ -29,7 +27,6 @@ else
 {
     $_REQUEST['act'] = trim($_REQUEST['act']);
 }
-
 /*------------------------------------------------------ */
 //-- 商品分类列表
 /*------------------------------------------------------ */
@@ -73,15 +70,12 @@ if ($_REQUEST['act'] == 'add')
     /* 模板赋值 */
     $smarty->assign('ur_here',      $_LANG['04_category_add']);
     $smarty->assign('action_link',  array('href' => 'category.php?act=list', 'text' => $_LANG['03_category_list']));
-
     $smarty->assign('goods_type_list',  goods_type_list(0)); // 取得商品类型
     $smarty->assign('attr_list',        get_attr_list()); // 取得商品属性
 
     $smarty->assign('cat_select',   cat_list(0, 0, true));
     $smarty->assign('form_act',     'insert');
     $smarty->assign('cat_info',     array('is_show' => 1));
-
-
 
     /* 显示页面 */
     assign_query_info();
@@ -95,7 +89,6 @@ if ($_REQUEST['act'] == 'insert')
 {
     /* 权限检查 */
     admin_priv('cat_manage');
-
     /* 初始化变量 */
     $cat['cat_id']       = !empty($_POST['cat_id'])       ? intval($_POST['cat_id'])     : 0;
     $cat['parent_id']    = !empty($_POST['parent_id'])    ? intval($_POST['parent_id'])  : 0;
@@ -112,6 +105,7 @@ if ($_REQUEST['act'] == 'insert')
 
     $cat['cat_recommend']  = !empty($_POST['cat_recommend'])  ? $_POST['cat_recommend'] : array();
 
+
     if (cat_exists($cat['cat_name'], $cat['parent_id']))
     {
         /* 同级别下不能有重复的分类名称 */
@@ -119,19 +113,30 @@ if ($_REQUEST['act'] == 'insert')
        sys_msg($_LANG['catname_exist'], 0, $link);
     }
 
-    $img_name = basename($image->upload_image($_FILES['cat_ico'], 'cat_ico'));
-    $cat['cat_ico'] = empty($img_name) ? '' : $img_name;
-
-	if($cat['grade'] > 10 || $cat['grade'] < 0)
+    if($cat['grade'] > 10 || $cat['grade'] < 0)
     {
         /* 价格区间数超过范围 */
        $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
        sys_msg($_LANG['grade_error'], 0, $link);
     }
-
     /* 入库的操作 */
     if ($db->autoExecute($ecs->table('category'), $cat) !== false)
     {
+            //获取最后插入的ID
+            $sql = "SELECT cat_id,parent_id FROM ". $ecs->table("category") ." ORDER BY cat_id DESC LIMIT 1";
+            $cat_id = $db->getRow($sql);
+            /*图片入库*/
+        if(!empty($_FILES['category_image']['name'])){
+                $img_name = basename($image->upload_image($_FILES['category_image'], 'category'));
+                $gallery_thumb = $image->make_thumb('../data/attached/category/' . $img_name, 91, 68);
+                if ($gallery_thumb === false) {
+                    sys_msg($image->error_msg(), 1, array(), false);
+                }
+                $car_id = $cat_id['cat_id'];
+                $sql = "INSERT INTO " . $ecs->table('touch_category') . "(`cat_id`,`cat_image`)VALUES('$car_id','$gallery_thumb')";
+                $db->query($sql);
+
+        }
         $cat_id = $db->insert_id();
         if($cat['show_in_nav'] == 1)
         {
@@ -157,6 +162,8 @@ if ($_REQUEST['act'] == 'insert')
 
         sys_msg($_LANG['catadd_succed'], 0, $link);
     }
+
+
  }
 
 /*------------------------------------------------------ */
@@ -169,7 +176,6 @@ if ($_REQUEST['act'] == 'edit')
     $cat_info = get_cat_info($cat_id);  // 查询分类信息数据
     $attr_list = get_attr_list();
     $filter_attr_list = array();
-
     if ($cat_info['filter_attr'])
     {
         $filter_attr = explode(",", $cat_info['filter_attr']);  //把多个筛选属性放到数组中
@@ -300,16 +306,7 @@ if ($_REQUEST['act'] == 'update')
        sys_msg($_LANG['grade_error'], 0, $link);
     }
 
-    $dat = $db->getRow("SELECT cat_name, show_in_nav, cat_ico FROM ". $ecs->table('category') . " WHERE cat_id = '$cat_id'");
-
-	if (!empty($_FILES['cat_ico']['tmp_name']))
-	{
-		@unlink('../data/cat_ico/' .$dat['cat_ico']);
-	}
-    $img_name = basename($image->upload_image($_FILES['cat_ico'], 'cat_ico'));
-	if ($img_name){
-    $cat['cat_ico'] = $img_name;
-	}
+    $dat = $db->getRow("SELECT cat_name, show_in_nav FROM ". $ecs->table('category') . " WHERE cat_id = '$cat_id'");
 
     if ($db->autoExecute($ecs->table('category'), $cat, 'UPDATE', "cat_id='$cat_id'"))
     {
@@ -347,13 +344,27 @@ if ($_REQUEST['act'] == 'update')
                 $db->query("UPDATE " . $ecs->table('nav') . " SET ifshow = 0 WHERE ctype = 'c' AND cid = '" . $cat_id . "' AND type = 'middle'");
             }
         }
+        /*图片入库*/
+        if(!empty($_FILES['category_image']['name'])){
+            $img_name = basename($image->upload_image($_FILES['category_image'], 'category'));
+            $gallery_thumb = $image->make_thumb('../data/attached/category/' . $img_name, 91, 68);
+            if ($gallery_thumb === false) {
+                sys_msg($image->error_msg(), 1, array(), false);
+            }
+            if(empty($cat_id['cat_image'])){
+                $sql = "INSERT INTO " . $ecs->table('touch_category') . "(`cat_id`,`cat_image`)VALUES('$cat_id','$gallery_thumb')";
+                $db->query($sql);
+            }else{
+                $sql = "UPDATE" . $ecs->table('touch_category') . " SET cat_image = '".$gallery_thumb."' WHERE cat_id =".$cat_id;
+                $db->query($sql);
+            }
+        }
 
         //更新首页推荐
         insert_cat_recommend($cat['cat_recommend'], $cat_id);
         /* 更新分类信息成功 */
         clear_cache_files(); // 清除缓存
         admin_log($_POST['cat_name'], 'edit', 'category'); // 记录管理员操作
-
         /* 提示信息 */
         $link[] = array('text' => $_LANG['back_list'], 'href' => 'category.php?act=list');
         sys_msg($_LANG['catedit_succed'], 0, $link);
@@ -595,29 +606,6 @@ if ($_REQUEST['act'] == 'remove')
 
     ecs_header("Location: $url\n");
     exit;
-}
-elseif ($_REQUEST['act'] == 'drop_cat_ico')
-{
-    admin_priv('cat_manage');
-    $cat_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-    $sql = "SELECT cat_ico FROM " . $ecs->table('category') . " WHERE cat_id = '$cat_id'";
-    $thumb_name = $db->getOne($sql);
-    if (!empty($thumb_name)) {
-        @unlink(ROOT_PATH . DATA_DIR . '/cat_ico/' . $thumb_name);
-        $sql = "UPDATE " . $ecs->table('category') . " SET cat_ico = '' WHERE cat_id = '$cat_id'";
-        $db->query($sql);
-    }
-    $link = array(
-        array(
-            'text' => '编辑商品分类',
-            'href' => 'category.php?act=edit&cat_id=' . $cat_id
-        ) ,
-        array(
-            'text' => '商品分类列表',
-            'href' => 'category.php?act=list'
-        )
-    );
-    sys_msg('删除商品分类小图成功', 0, $link);
 }
 
 /*------------------------------------------------------ */

@@ -13,7 +13,7 @@
  * $Id: flashplay.php 16131 2009-05-31 08:21:41Z wangleisvn $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -25,7 +25,7 @@ if ($_REQUEST['act']== 'list_edit')
     /* 检查权限 */
     admin_priv('shop_authorized');
 
-    include_once(ROOT_PATH . 'includes/lib_license.php');
+    include_once(BASE_PATH . 'helpers/license_helper.php');
 
     $license = get_shop_license();
 
@@ -51,7 +51,7 @@ elseif ($_REQUEST['act']== 'download')
     /* 检查权限 */
     admin_priv('shop_authorized');
 
-    include_once(ROOT_PATH . 'includes/lib_license.php');
+    include_once(BASE_PATH . 'helpers/license_helper.php');
 
     $license = get_shop_license();
 
@@ -106,10 +106,10 @@ elseif ($_REQUEST['act']== 'upload')
     }
     else
     {
-        include_once(ROOT_PATH . 'includes/cls_transport.php');
-        include_once(ROOT_PATH . 'includes/cls_json.php');
-        include_once(ROOT_PATH . 'includes/lib_main.php');
-        include_once(ROOT_PATH . 'includes/lib_license.php');
+        // include_once(ROOT_PATH . 'includes/cls_transport.php');
+        // include_once(ROOT_PATH . 'includes/cls_json.php');
+        include_once(BASE_PATH . 'helpers/main_helper.php');
+        include_once(BASE_PATH . 'helpers/license_helper.php');
 
         // 证书登录
         $login_result = license_login();

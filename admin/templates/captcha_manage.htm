@@ -11,7 +11,7 @@
   <td width="60%" >
   <strong>{$lang.captcha_turn_on}</strong><br />
   {$lang.turn_on_note}<br />
-  <img src="../captcha.php?{$rand}" alt="captcha" style="vertical-align: middle;cursor: pointer;" onClick="this.src='../captcha.php?'+Math.random()" />
+  <img src="index.php?act=captcha&{$rand}" alt="captcha" style="vertical-align: middle;cursor: pointer;" onClick="this.src='index.php?act=captcha&'+Math.random()" />
   </td>
   <td>
   <input type="checkbox" name="captcha_register" value="1" {$captcha.register} />{$lang.captcha_register}<br />

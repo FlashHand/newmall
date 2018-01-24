@@ -16,7 +16,7 @@
  * $Id: template.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 require_once('includes/lib_template.php');
@@ -62,15 +62,15 @@ if ($_REQUEST['act'] == 'list')
         $sql .= " AND theme <> '".$tmp['code']."' ";
         $available_code[] = $tmp['code'];
     }
-    $tmp_bak_dir = @opendir(ROOT_PATH . 'temp/backup/library/');
+    $tmp_bak_dir = @opendir(ROOT_PATH . 'data/backup/library/');
     while ($file = readdir($tmp_bak_dir))
     {
-        if ($file != '.' && $file != '..' && $file != '.svn' && $file != 'index.htm' && is_file(ROOT_PATH .'temp/backup/library/' . $file) == true)
+        if ($file != '.' && $file != '..' && $file != '.svn' && $file != 'index.htm' && $file != '.gitignore' && is_file(ROOT_PATH .'data/backup/library/' . $file) == true)
         {
             $code = substr($file, 0, strpos($file, '-'));
             if (!in_array($code, $available_code))
             {
-                @unlink(ROOT_PATH . 'temp/backup/library/' . $file);
+                @unlink(ROOT_PATH . 'data/backup/library/' . $file);
             }
         }
     }
@@ -579,7 +579,7 @@ if ($_REQUEST['act'] == 'backup')
     $tpl= $_CFG['template'];
     //$tpl = trim($_REQUEST['tpl_name']);
 
-    $filename = '../temp/backup/' . $tpl . '_' . date('Ymd') . '.zip';
+    $filename = '../data/backup/' . $tpl . '_' . date('Ymd') . '.zip';
 
     $zip = new PHPZip;
     $done = $zip->zip('../themes/' . $tpl . '/', $filename);
@@ -622,7 +622,7 @@ if ($_REQUEST['act'] == 'update_library')
 
     if (@file_exists($lib_file) === true && @file_put_contents($lib_file, $html))
     {
-        @file_put_contents('../temp/backup/library/' . $_CFG['template'] . '-' . $_POST['lib'] . '.lbi', $org_html);
+        @file_put_contents('../data/backup/library/' . $_CFG['template'] . '-' . $_POST['lib'] . '.lbi', $org_html);
 
         make_json_result('', $_LANG['update_lib_success']);
     }
@@ -641,7 +641,7 @@ if ($_REQUEST['act'] == 'restore_library')
     $lib_name   = trim($_GET['lib']);
     $lib_file   = '../themes/' . $_CFG['template'] . '/library/' . $lib_name . '.lbi';
     $lib_file   = str_replace("0xa", '', $lib_file); // 过滤 0xa 非法字符
-    $lib_backup = '../temp/backup/library/' . $_CFG['template'] . '-' . $lib_name . '.lbi';
+    $lib_backup = '../data/backup/library/' . $_CFG['template'] . '-' . $lib_name . '.lbi';
     $lib_backup = str_replace("0xa", '', $lib_backup); // 过滤 0xa 非法字符
 
     if (file_exists($lib_backup) && filemtime($lib_backup) >= filemtime($lib_file))
@@ -764,7 +764,11 @@ if ($_REQUEST['act'] == 'restore_backup')
                 $temple_file = ROOT_PATH . 'themes/' . $_CFG['template'] . '/' . $file . '.dwt';
                 $template_content = file_get_contents($temple_file);
                 $match = array();
-                $template_content = preg_replace($pattern, "'<!-- TemplateBeginEditable name=\"\\1\" -->\r\n' . \$regions['\\1'] . '\r\n<!-- TemplateEndEditable -->';", $template_content);
+                if (!function_exists('version_compare') || version_compare(phpversion(), '5.3.0', '<')) {
+                    $template_content = preg_replace($pattern, "'<!-- TemplateBeginEditable name=\"\\1\" -->\r\n' . \$regions['\\1'] . '\r\n<!-- TemplateEndEditable -->';", $template_content);
+                } else {
+                    $template_content = preg_replace_callback($pattern, function($r) use($regions){return "<!-- TemplateBeginEditable name=\"" . $r[1] . "\" -->\r\n" . $regions[$r[1]] . "\r\n<!-- TemplateEndEditable -->";}, $template_content);
+                }
                 file_put_contents($temple_file, $template_content);
             }
 
@@ -836,7 +840,7 @@ function read_tpl_style($tpl_name, $flag=1)
     $temp = '';
     $start = 0;
     $available_templates = array();
-    $dir = ROOT_PATH . 'themes/' . $tpl_name . '/';
+    $dir = ROOT_PATH . 'themes/' . $tpl_name . '/css/';
     $tpl_style_dir = @opendir($dir);
     while ($file = readdir($tpl_style_dir))
     {

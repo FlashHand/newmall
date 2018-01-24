@@ -13,16 +13,15 @@ $Id: main.css 13991 2008-01-17 06:17:23Z maruitao $
 }
 
 body {
-  background: #DDEEF2;
+  background: #F9F9F9;
   padding: 10px;
 }
 
 h1 {
-  background: #F4FAFB;
-  border: 1px solid #BBDDE5;
-  color: #9CACAF;
+  /*background: #E2E3E5;*/
+  color: #36474F;
   font-size: 14px;
-  padding: 7px 10px;
+  /*padding: 7px 10px;*/
   margin: 0 0 10px 0;
   overflow:hidden;
 }
@@ -47,24 +46,33 @@ h1 .action-span {
 }
 
 h1 .action-span a {
-  color: #666;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   text-decoration: none;
   display:block;
-  padding:2px 5px 2px 23px;
+  padding:5px 5px 5px 23px;
   *padding:4px 5px 2px 23px;
-  border:1px solid #278296;
-  border-right:2px solid #278296;
-  border-bottom:2px solid #278296;
-  background:#DDEEF2 url(../images/icon_add.gif) no-repeat 3px center;
-  *background:#DDEEF2 url(../images/icon_add.gif) no-repeat 3px 3px;
+  border:1px solid #BCBCBC;
+  background:#1b9ad5 url(../images/icon_add.gif) no-repeat 3px center;
+  *background:#1b9ad5 url(../images/icon_add.gif) no-repeat 3px 3px;
+
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  margin: 5px 5px;
+  color: #fff;
 }
 
 h1 .action-span a:hover {
-  border:1px solid #5FA6B6;
-  border-right:2px solid #5FA6B6;
-  border-bottom:2px solid #5FA6B6;
+  border:1px solid #BCBCBC;
   background:#FFF url(../images/icon_add.gif) no-repeat 3px center;
   *background:#FFF url(../images/icon_add.gif) no-repeat 3px 3px;
   color:#666;
@@ -73,21 +81,21 @@ h1 .action-span a:hover {
 
 h1 .action-span1 {
   float:left;
-  margin-top:2px;
+  margin:2px 0;
+  line-height: 20px;
 }
 
 #footer {
   background: #F4FaFb;
-  border: 1px solid #BBDDE5;
+  border: 1px solid #CBE9F3;
   padding: 15px;
-  color: #9CACAF;
+  color: #7394A4;
   margin: 10px 0;
   text-align: center;
 }
 
 .main-div {
-  background: #F4FAFB;
-  border: 1px solid #BBDDE5;
+  /*border: 1px solid #BCBCBC;*/
   margin-bottom: 10px;
   padding: 2px;
 }
@@ -100,8 +108,7 @@ h1 .action-span1 {
 }
 
 .form-div {
-  background: #F4FaFb;
-  border: 1px solid #BBDDE5;
+  background: #E2E3E5;
   padding: 5px;
   color: #808080;
   margin: 0 0 10px 0;
@@ -116,8 +123,8 @@ h1 .action-span1 {
  */
 .list-div {
   width: 100%;
-  background: #EEF8F9;
-  border: 1px solid #BBDDE5;
+  background: #CACACA;
+  margin-bottom: 10px;
 }
 
 .list-div-ad {
@@ -129,14 +136,16 @@ h1 .action-span1 {
 }
 
 .list-div th {
-  line-height: 24px;
-  background: #BBDDE5 url("../images/th_bg.gif") repeat-x;
+  font-size: 13px; 
+  line-height: 28px;
+  background: #E2E3E5;
   white-space: nowrap;
 }
 
 .list-div td {
   background: #FFF;
-  line-height: 22px;
+  height: 30px;
+  /*line-height: 28px;*/
 }
 
 .list-div td.first-cell{
@@ -180,53 +189,48 @@ h1 .action-span1 {
  标签部分的样式
  */
 .tab-div {
-  background: #EEF8F9;
-  border: 1px solid #BBDDE5;
+  border: 1px solid #BCBCBC;
   margin: 0 0 10px 0;
   padding: 1px;
 }
 #tabbar-div {
-  background: #80BDCB;
+  background: #E2E3E5;
   padding-left: 10px;
-  height: 22px;
+  height: 30px;
   padding-top: 1px;
 }
 
 #tabbar-div p {
-  margin: 2px 0 0 0;
+  margin: 0;
 }
 
 .tab-front {
-  background: #BBDDE5;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 28px;
   font-weight: bold;
-  padding: 4px 15px 4px 18px;
-  border-right: 2px solid #278296;
+  padding: 5px 15px 5px 18px;
   cursor: hand;
   cursor: pointer;
 }
 
 .tab-back {
-  color: #FFF;
-  line-height: 20px;
-  padding: 4px 15px 4px 18px;
-  border-right: 1px solid #FFF;
+  font-size: 14px;
+  color: #192E32;
+  line-height: 28px;
+  padding: 5px 15px 5px 18px;
   cursor: hand;
   cursor: pointer;
 }
 
 .tab-hover {
-  color: #FFF;
-  background: #94C9D3;
-  line-height: 20px;
-  padding: 4px 15px 4px 18px;
-  border-right: 1px solid #FFF;
+  font-size: 14px;
+  line-height: 28px;
+  padding: 5px 15px 5px 18px;
   cursor: hand;
   cursor: pointer;
 }
 
 #tabbody-div {
-  border: 2px solid #BBDDE5;
   padding: 10px;
   background: #FFF;
 }
@@ -243,7 +247,7 @@ h1 .action-span1 {
 表单部分
 */
 .notice-span {
-  color: #666;
+  color: #36474F;
 }
 
 td.label {
@@ -297,10 +301,28 @@ td.micro-label {
 }
 
 input.button {
-  padding: 2px 8px 0px;
+  display: inline-block;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  padding: 6px 12px;
   margin: 2px 2px;
-  border: 1px solid #2D5082;
-  background: url(../images/button_bg.gif) repeat-x;
+  border: 1px solid #357ebd;
+  background: #1b9ad5;
+  color: #fff;
 }
 
 input.capital {
@@ -616,15 +638,10 @@ div#popMsg {
 }
 
 a.special:link, a.special:visited{
-  margin:0 5px;
-  padding:1px 5px;
-  *padding:2px 5px 0;
-  border:1px solid #91C4D0;
-  border-right:2px solid #278296;;
-  border-bottom:2px solid #278296;
-  background:#DDEEF2;
-  text-decoration:none;
-  font-weight:400;
+  padding: 3px 8px;
+  margin: 2px 2px;
+  border: 1px solid #BCBCBC;
+  background: #E2E3E5;
 }
 
 a.special:hover{
@@ -642,8 +659,7 @@ a.special:active{
 .order-goods{
   position:absolute;
   width:80%;
-  background: #EEF8F9;
-  border: 1px solid #BBDDE5;
+  background: #E2E3E5;
   /*
   filter:alpha(opacity=90);
   opacity:0.9;
@@ -651,7 +667,7 @@ a.special:active{
 }
 .order-goods td {
   background: #FFF;
-  line-height: 22px;
+  line-height: 24px;
 }
 /* 文件校验 */
 .infobox {
@@ -787,48 +803,41 @@ em, cite, th {
   padding: 1px;
 }
 #custabbar-div {
-  background: #80BDCB;
+  background: #E2E3E5;
   padding-left: 10px;
-  height: 22px;
+  height: 30px;
   overflow : hidden;
 }
 
 #custabbar-div p {
-  margin: 2px 0 0 0;
+  margin: 0;
 }
 
 .custab-front {
-  background: #BBDDE5;
-  line-height: 20px;
+  line-height: 28px;
   font-weight: bold;
   padding: 4px 15px 4px 18px;
-  border-right: 2px solid #278296;
   cursor: hand;
   cursor: pointer;
   margin: -5px -5px -5px -3px;
 }
 
 .custab-back {
-  color: #FFF;
-  line-height: 20px;
+  line-height: 28px;
   padding: 4px 15px 4px 18px;
-  border-right: 1px solid #FFF;
   cursor: hand;
   cursor: pointer;
 }
 
 .custab-hover {
-  color: #FFF;
-  background: #94C9D3;
-  line-height: 20px;
+  line-height: 28px;
   padding: 4px 15px 4px 18px;
-  border-right: 1px solid #FFF;
   cursor: hand;
   cursor: pointer;
 }
 
 #custabbody-div {
-  border: 2px solid #BBDDE5;
+  border: 1px solid #BBDDE5;
   padding: 10px;
   background: #FFF;
 }

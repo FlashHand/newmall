@@ -14,7 +14,7 @@
  * $Id: goods_export.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 
@@ -120,9 +120,9 @@ elseif ($_REQUEST['act'] == 'act_export_taobao')
         }
     }
 
-    if (EC_CHARSET != 'utf-8')
+    if (CHARSET != 'utf-8')
     {
-        $content = ecs_iconv(EC_CHARSET, 'utf-8', $content);
+        $content = ecs_iconv(CHARSET, 'utf-8', $content);
     }
     $zip->add_file("\xFF\xFE" . utf82u2($content), 'goods_list.csv');
 
@@ -206,9 +206,9 @@ elseif ($_REQUEST['act'] == 'act_export_taobao V4.3')
             $zip->add_file(file_get_contents(ROOT_PATH . $row['goods_img']), $row['goods_img']);
         }
     }
-    if (EC_CHARSET != 'utf-8')
+    if (CHARSET != 'utf-8')
     {
-        $content = ecs_iconv(EC_CHARSET, 'utf-8', $content);
+        $content = ecs_iconv(CHARSET, 'utf-8', $content);
     }
     $zip->add_file("\xFF\xFE" . utf82u2($content), 'goods_list.csv');
 
@@ -304,7 +304,7 @@ elseif($_REQUEST['act'] == 'act_export_ecshop')
     }
     $charset = empty($_POST['charset']) ? 'UTF8' : trim($_POST['charset']);
 
-    $zip->add_file(ecs_iconv(EC_CHARSET, $charset, $content), 'goods_list.csv');
+    $zip->add_file(ecs_iconv(CHARSET, $charset, $content), 'goods_list.csv');
 
     header("Content-Disposition: attachment; filename=goods_list.zip");
     header("Content-Type: application/unknown");
@@ -433,7 +433,7 @@ elseif ($_REQUEST['act'] == 'act_export_paipai')
         }
     }
 
-    if (EC_CHARSET == 'utf-8')
+    if (CHARSET == 'utf-8')
     {
         $zip->add_file(ecs_iconv('UTF8', 'GB2312', $content), 'goods_list.csv');
     }
@@ -561,7 +561,7 @@ elseif ($_REQUEST['act'] == 'act_export_paipai4')
         }
     }
 
-    if (EC_CHARSET == 'utf-8')
+    if (CHARSET == 'utf-8')
     {
         $zip->add_file(ecs_iconv('UTF8', 'GB2312', $content), 'goods_list.csv');
     }
@@ -672,7 +672,7 @@ elseif ($_REQUEST['act'] == 'act_export_custom')
         }
     }
     $charset = empty($_POST['charset_custom']) ? 'UTF8' : trim($_POST['charset_custom']);
-    $zip->add_file(ecs_iconv(EC_CHARSET, $charset, $content), 'goods_list.csv');
+    $zip->add_file(ecs_iconv(CHARSET, $charset, $content), 'goods_list.csv');
 
     header("Content-Disposition: attachment; filename=goods_list.zip");
     header("Content-Type: application/unknown");
@@ -680,7 +680,7 @@ elseif ($_REQUEST['act'] == 'act_export_custom')
 }
 elseif ($_REQUEST['act'] == 'get_goods_list')
 {
-    include_once(ROOT_PATH . 'includes/cls_json.php');
+    // include_once(ROOT_PATH . 'includes/cls_json.php');
     $json = new JSON;
     $filters = $json->decode($_REQUEST['JSON']);
     $arr = get_goods_list($filters);
@@ -783,9 +783,9 @@ elseif ($_REQUEST['act'] == 'act_export_taobao V4.6')
         $content .= implode("\t", $goods_value) . "\n";
 
     }
-    if (EC_CHARSET != 'utf-8')
+    if (CHARSET != 'utf-8')
     {
-        $content = ecs_iconv(EC_CHARSET, 'utf-8', $content);
+        $content = ecs_iconv(CHARSET, 'utf-8', $content);
     }
     $zip->add_file("\xFF\xFE" . utf82u2($content), 'goods_list.csv');
 

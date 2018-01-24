@@ -12,7 +12,7 @@
  * $Id: goods_batch.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
-define('IN_ECS', true);
+define('IN_ECTOUCH', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 require('includes/lib_goods.php');
@@ -30,7 +30,7 @@ if ($_REQUEST['act'] == 'add')
     $smarty->assign('cat_list', cat_list());
 
     /* 取得可选语言 */
-    $dir = opendir('../languages');
+    $dir = opendir('../include/languages');
     $lang_list = array(
         'UTF8'      => $_LANG['charset']['utf8'],
         'GB2312'    => $_LANG['charset']['zh_cn'],
@@ -39,7 +39,7 @@ if ($_REQUEST['act'] == 'add')
     $download_list = array();
     while (@$file = readdir($dir))
     {
-        if ($file != '.' && $file != '..' && $file != ".svn" && $file != "_svn" && is_dir('../languages/' .$file) == true)
+        if ($file != '.' && $file != '..' && $file != ".svn" && $file != "_svn" && is_dir('../include/languages/' .$file) == true)
         {
             $download_list[$file] = sprintf($_LANG['download_file'], isset($_LANG['charset'][$file]) ? $_LANG['charset'][$file] : $file);
         }
@@ -92,7 +92,7 @@ elseif ($_REQUEST['act'] == 'upload')
             }
 
             // 转换编码
-            if (($_POST['charset'] != 'UTF8') && (strpos(strtolower(EC_CHARSET), 'utf') === 0))
+            if (($_POST['charset'] != 'UTF8') && (strpos(strtolower(CHARSET), 'utf') === 0))
             {
                 $line = ecs_iconv($_POST['charset'], 'UTF8', $line);
             }
@@ -309,7 +309,7 @@ elseif ($_REQUEST['act'] == 'upload')
                 $line_number++;
                 continue;
             }
-            if (($_POST['charset'] == 'UTF8') && (strpos(strtolower(EC_CHARSET), 'utf') == 0))
+            if (($_POST['charset'] == 'UTF8') && (strpos(strtolower(CHARSET), 'utf') == 0))
             {
                 $line = ecs_iconv($_POST['charset'], 'GBK', $line);
             }
@@ -372,8 +372,8 @@ elseif ($_REQUEST['act'] == 'insert')
 
     if (isset($_POST['checked']))
     {
-        include_once(ROOT_PATH . 'includes/cls_image.php');
-        $image = new cls_image($_CFG['bgcolor']);
+        // include_once(ROOT_PATH . 'includes/cls_image.php');
+        $image = new image($_CFG['bgcolor']);
 
         /* 字段默认值 */
         $default_value = array(
@@ -886,7 +886,7 @@ elseif ($_REQUEST['act'] == 'download')
     // 下载
     if ($_GET['charset'] != $_CFG['lang'])
     {
-        $lang_file = '../languages/' . $_GET['charset'] . '/admin/goods_batch.php';
+        $lang_file = '../include/languages/' . $_GET['charset'] . '/admin/goods_batch.php';
         if (file_exists($lang_file))
         {
             unset($_LANG['upload_goods']);
@@ -899,7 +899,7 @@ elseif ($_REQUEST['act'] == 'download')
         if ($_GET['charset'] == 'zh_cn' || $_GET['charset'] == 'zh_tw')
         {
             $to_charset = $_GET['charset'] == 'zh_cn' ? 'GB2312' : 'BIG5';
-            echo ecs_iconv(EC_CHARSET, $to_charset, join(',', $_LANG['upload_goods']));
+            echo ecs_iconv(CHARSET, $to_charset, join(',', $_LANG['upload_goods']));
         }
         else
         {
@@ -918,7 +918,7 @@ elseif ($_REQUEST['act'] == 'download')
 
 elseif ($_REQUEST['act'] == 'get_goods')
 {
-    $filter = &new stdclass;
+    $filter = new stdclass;
 
     $filter->cat_id = intval($_GET['cat_id']);
     $filter->brand_id = intval($_GET['brand_id']);

@@ -1,5 +1,5 @@
-<div id="footer">
-{$query_info}{$gzip_enabled}{$memory_info}<br />
+
+<div id="footer" style="display:none">
 {$lang.copyright}
 </div>
 {insert_scripts files="../js/utils.js"}
@@ -40,7 +40,7 @@ document.onmousemove=function(e)
   if (typeof(obj.onclick) == 'function' && obj.onclick.toString().indexOf('listTable.edit') != -1)
   {
     obj.title = '{$lang.span_edit_help}';
-    obj.style.cssText = 'background: #278296;';
+    obj.style.cssText = 'background: none;';
     obj.onmouseout = function(e)
     {
       this.style.cssText = '';
@@ -116,7 +116,7 @@ if (document.getElementById("listDiv"))
 
       for (i = 0; i < row.cells.length; i++)
       {
-        if (row.cells[i].tagName != "TH") row.cells[i].style.backgroundColor = '#F4FAFB';
+        if (row.cells[i].tagName != "TH") row.cells[i].style.backgroundColor = '#EFEFEF';
       }
     }
 
