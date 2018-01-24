@@ -24,7 +24,7 @@
 			<a class="btn-submit1 j-ewm-box" href="javascript:;">立即关注</a>
 		</div>
 		<div class="index-weixin-box">
-			<div><img src="__TPL__/statics/img/ewm.png"></div>
+			<div><img src="http://7xshxa.com1.z0.glb.clouddn.com/dsh-qrcode.jpg"></div>
 			<p class="text-c">长按二维码关注公众微信</p>
 		</div>
 		<div class="index-bg-box"></div>
@@ -41,12 +41,12 @@
 		</div>
 		<div class="swiper-wrapper">
 			554fcae493e564ee0dc75bdf2ebf94caads|a:3:{s:4:"name";s:3:"ads";s:2:"id";s:3:"255";s:3:"num";s:1:"3";}554fcae493e564ee0dc75bdf2ebf94ca		</div>
-		
+
 		<div class="swiper-pagination banner-first-pagination"></div>
-		
+
 		<div class="linear"></div>
 	</div>
-	
+
 	<nav class="bg-white ptb-1 index-nav">
 		<ul class="box ul-4 text-c bg-white">
 						<li class="fl">
@@ -81,10 +81,10 @@
 				<a href="index.php?c=flow&amp;a=cart" ><img src="themes/default/images/nav/nav_7.png" /></a>
 				<a class="index-menu-text" href="index.php?c=flow&amp;a=cart" >购物车</a>
 			</li>
-			
+
 		</ul>
 	</nav>
-	
+
 	<div class="box  title inx-ms m-top06">
 		<div class="dis-box m-top1px b-color-f">
 			<div class="box-flex title text-c  pt-1 position-rel index-sale-list">
@@ -99,7 +99,7 @@
 	</div>
 	<ul class="index-cate-box m-top06">
 		554fcae493e564ee0dc75bdf2ebf94caads|a:3:{s:4:"name";s:3:"ads";s:2:"id";s:3:"256";s:3:"num";s:2:"10";}554fcae493e564ee0dc75bdf2ebf94ca	</ul>
-	
+
 	<div class="text-c n-cate-box">
 		<p class="index-title"><i class="iconfont icon-cainixihuan is-cainixihuan"></i>猜你喜欢</p>
 		<p class="index-small-title">实时推荐最适合您的宝贝</p>
@@ -143,18 +143,18 @@
 				<a href="/index.php?m=default&c=category&a=top_all&u=0" class="box-flex nav-list">
 					<i class="nav-box i-cate"></i><span>分类</span>
 				</a>
-				
+
 				<a href="/index.php?m=default&c=store&a=check_store&u=0" class="box-flex nav-list ">
 					<i class="nav-box i-shop"></i><span>店铺</span>
 				</a>
-				
+
 				<a href="/index.php?m=default&c=flow&a=cart&u=0" class="box-flex position-rel nav-list">
 					<i class="nav-box i-flow"></i><span>购物车</span>
 				</a>
 				<a href="/index.php?m=default&c=user&a=index&u=0" class="box-flex nav-list">
 					<i class="nav-box i-user"></i><span>我的</span>
 				</a>
-		</footer>			
+		</footer>
 <div class="search-div ts-3">
 	<section class="search">
 		<form action="/index.php?m=default&c=category&a=index&u=0" method="post">
@@ -181,7 +181,7 @@
 			<label class="fl">最近搜索</label>
 			<span class="fr" onclick="javascript:clearHistroy();"><i class="iconfont icon-xiao10 is-xiao10 jian-top fr"></i></span>
 		</p>
-		
+
 			<ul class="hot-search a-text-more a-text-one" id="search_histroy">
 							</ul>
 			</div>
@@ -218,7 +218,7 @@ function clearHistroy(){
 	get_asynclist("/index.php?m=default&c=index&a=ajax_goods&type=best&u=0", '__TPL__/images/loader.gif');
 </script>
 <script type="text/javascript ">
-	$(function($) {		
+	$(function($) {
 		var mySwiper = new Swiper('.banner-first', {
 			pagination: '.banner-first-pagination',
 			loop: false,
@@ -232,12 +232,12 @@ function clearHistroy(){
 	if ($(".index-weixin-box").hasClass("index-weixin-box")) {
 		$(".index-banner").css({
 			"marginTop": "0rem",
-			
+
 		})
 	} else {
 		$(".index-banner").css({
 			"marginTop": "0rem",
-			
+
 		})
 	}
 </script>
