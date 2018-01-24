@@ -42,23 +42,23 @@ CREATE TABLE IF NOT EXISTS `ecs_touch_activity` (
 -- 表的结构 `ecs_touch_topic`
 --
 
-CREATE TABLE IF NOT EXISTS `ecs_touch_topic` (
-  `topic_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `intro` text NOT NULL DEFAULT '',
-  `start_time` int(11) NOT NULL DEFAULT '0',
-  `end_time` int(10) NOT NULL DEFAULT '0',
-  `data` text NOT NULL DEFAULT '',
-  `template` varchar(255) NOT NULL DEFAULT '',
-  `css` text NOT NULL DEFAULT '',
-  `topic_img` varchar(255) DEFAULT NULL,
-  `title_pic` varchar(255) DEFAULT NULL,
-  `base_style` char(6) DEFAULT NULL,
-  `htmls` mediumtext,
-  `keywords` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  KEY `topic_id` (`topic_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+-- CREATE TABLE IF NOT EXISTS `ecs_touch_topic` (
+--   `topic_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+--   `title` varchar(255) NOT NULL DEFAULT '',
+--   `intro` text NOT NULL DEFAULT '',
+--   `start_time` int(11) NOT NULL DEFAULT '0',
+--   `end_time` int(10) NOT NULL DEFAULT '0',
+--   `data` text NOT NULL DEFAULT '',
+--   `template` varchar(255) NOT NULL DEFAULT '',
+--   `css` text NOT NULL DEFAULT '',
+--   `topic_img` varchar(255) DEFAULT NULL,
+--   `title_pic` varchar(255) DEFAULT NULL,
+--   `base_style` char(6) DEFAULT NULL,
+--   `htmls` mediumtext,
+--   `keywords` varchar(255) DEFAULT NULL,
+--   `description` varchar(255) DEFAULT NULL,
+--   KEY `topic_id` (`topic_id`)
+-- ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `ecs_touch_ad`
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `ecs_touch_nav` (
   `opennew` tinyint(1) NOT NULL DEFAULT '0',
   `url` varchar(255) NOT NULL DEFAULT '',
   `pic` varchar(255) NOT NULL DEFAULT '',
-  `type` varchar(10) NOT NULL DEFAULT '', 
+  `type` varchar(10) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `ifshow` (`ifshow`)
