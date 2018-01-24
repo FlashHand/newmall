@@ -12,7 +12,7 @@
 			<a class="btn-submit1 j-ewm-box" href="javascript:;">立即关注</a>
 		</div>
 		<div class="index-weixin-box">
-			<div><img src="__TPL__/statics/img/ewm.png"></div>
+			<div><img src="http://7xshxa.com1.z0.glb.clouddn.com/dsh-qrcode.jpg"></div>
 			<p class="text-c">长按二维码关注公众微信</p>
 		</div>
 		<div class="index-bg-box"></div>
@@ -29,7 +29,7 @@
 			</ul>
 		</div>
 		<div class="swiper-wrapper">
-			<?php 
+			<?php
 $k = array (
   'name' => 'ads',
   'id' => '255',
@@ -38,12 +38,12 @@ $k = array (
 echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 ?>
 		</div>
-		
+
 		<div class="swiper-pagination banner-first-pagination"></div>
-		
+
 		<div class="linear"></div>
 	</div>
-	
+
 	<nav class="bg-white ptb-1 index-nav">
 		<ul class="box ul-4 text-c bg-white">
 			<?php $_from = $this->_var['navigator']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }; $this->push_vars('', 'nav');if (count($_from)):
@@ -57,11 +57,11 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 
 		</ul>
 	</nav>
-	
+
 	<div class="box  title inx-ms m-top06">
 		<div class="dis-box m-top1px b-color-f">
 			<div class="box-flex title text-c  pt-1 position-rel index-sale-list">
-				<?php 
+				<?php
 $k = array (
   'name' => 'ads',
   'id' => '257',
@@ -73,7 +73,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 			<div class="box-flex ">
 				<ul class="index-discount">
 					<li class="">
-						<?php 
+						<?php
 $k = array (
   'name' => 'ads',
   'id' => '258',
@@ -88,7 +88,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 	</div>
 
 	<ul class="index-cate-box m-top06">
-		<?php 
+		<?php
 $k = array (
   'name' => 'ads',
   'id' => '256',
@@ -98,7 +98,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 ?>
 	</ul>
 
-	
+
 	<div class="text-c n-cate-box">
 		<p class="index-title"><i class="iconfont icon-cainixihuan is-cainixihuan"></i>猜你喜欢</p>
 		<p class="index-small-title">实时推荐最适合您的宝贝</p>
@@ -145,18 +145,18 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 				<a href="<?php echo url('category/top_all');?>" class="box-flex nav-list">
 					<i class="nav-box i-cate"></i><span>分类</span>
 				</a>
-				
+
 				<a href="<?php echo url('store/check_store');?>" class="box-flex nav-list ">
 					<i class="nav-box i-shop"></i><span>店铺</span>
 				</a>
-				
+
 				<a href="<?php echo url('flow/cart');?>" class="box-flex position-rel nav-list">
 					<i class="nav-box i-flow"></i><span>购物车</span>
 				</a>
 				<a href="<?php echo url('user/index');?>" class="box-flex nav-list">
 					<i class="nav-box i-user"></i><span>我的</span>
 				</a>
-		</footer>			
+		</footer>
 <?php echo $this->fetch('library/new_search.lbi'); ?>
 <?php echo $this->fetch('library/new_page_footer.lbi'); ?>
 <script type="text/javascript" src="__PUBLIC__/js/jquery.more.js"></script>
@@ -164,7 +164,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 	get_asynclist("<?php echo url('index/ajax_goods', array('type'=>'best'));?>", '__TPL__/images/loader.gif');
 </script>
 <script type="text/javascript ">
-	$(function($) {		
+	$(function($) {
 		var mySwiper = new Swiper('.banner-first', {
 			pagination: '.banner-first-pagination',
 			loop: false,
@@ -178,12 +178,12 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 	if ($(".index-weixin-box").hasClass("index-weixin-box")) {
 		$(".index-banner").css({
 			"marginTop": "0rem",
-			
+
 		})
 	} else {
 		$(".index-banner").css({
 			"marginTop": "0rem",
-			
+
 		})
 	}
 </script>
