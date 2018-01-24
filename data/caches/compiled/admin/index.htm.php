@@ -227,7 +227,7 @@ function addFavorite(url, title) {
           <div id="title"></div>
           <!-- Top navigation -->
           <div id="topnav" class="top-nav">
-            <ul>
+            <ul>		
               <li><a href="privilege.php?act=logout" title="<?php echo $this->_var['lang']['signout']; ?>"><span><?php echo $this->_var['lang']['signout']; ?></span></a></li>
               <li><a href="../index.php" target="_blank" title="<?php echo $this->_var['lang']['preview']; ?>"><span><?php echo $this->_var['lang']['preview']; ?></span></a></li>
               <li><a href="index.php?act=clear_cache" target="workspace">更新缓存</a></li>
@@ -280,7 +280,7 @@ function addFavorite(url, title) {
         <?php endforeach; endif; unset($_from); ?><?php $this->pop_vars();; ?>
 
         </div><div class="copyright">
-        <p>Powered By <em><a href="http://www.ectouch.cn" target="_blank"><span class="vol"><font class="b">ECTouch</font><font class="o">.Cn</font></span></a></em></p></div></td>
+        <p>Powered By <em><a href="#" target="_blank"><span class="vol"><font class="b">ECTouch</font><font class="o">.Cn</font></span></a></em></p></div></td>
       <td valign="top" width="100%"><iframe src="" id="workspace" name="workspace" style="overflow: visible;" frameborder="0" width="100%" height="100%" scrolling="yes" onload="window.parent"></iframe></td>
     </tr>
   </tbody>

@@ -92,7 +92,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 $k = array (
   'name' => 'ads',
   'id' => '256',
-  'num' => '4',
+  'num' => '10',
 );
 echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 ?>
@@ -113,19 +113,19 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 	<div class="n-footer-box">
 		<ul class="n-footer-minbox">
 			<li>
-				<a href="http://m.ecmoban.com/index.php?m=touch&amp;c=index&amp;a=download">
+				<a href="#">
 					<div class="n-footer-img-box"><i class="iconfont icon-qunfengshangjiazhushouapperweimafuben is-ban-fize"></i></div>
 					<p class="footer-tit1">客户端</p>
 				</a>
 			</li>
 			<li>
-				<a href="index.html">
+				<a href="#">
 					<div class="n-footer-img-box"><i class="iconfont icon-shoujiyanzheng is-ban-fize active"></i></div>
 					<p class="footer-tit">触屏版</p>
 				</a>
 			</li>
 			<li>
-				<a href="http://www.ecmoban.com/?pc">
+				<a href="#">
 					<div class="n-footer-img-box"><i class="iconfont icon-pc is-ban-fize jian-top-2"></i></div>
 					<p class="footer-tit1">电脑版</p>
 				</a>

@@ -12,12 +12,12 @@ if($independent){
 	//关键词
 	$seo_keywords = trim($_POST['sitekeywords']);
 	//更新配置信息
-	mysql_query("UPDATE `{$dbPrefix}shop_config` SET  `value` = '$site_name' WHERE code='shop_name'");
-	mysql_query("UPDATE `{$dbPrefix}shop_config` SET  `value` = '$site_name' WHERE code='shop_title' ");
-	mysql_query("UPDATE `{$dbPrefix}shop_config` SET  `value` = '$seo_description' WHERE code='shop_desc'");
-	mysql_query("UPDATE `{$dbPrefix}shop_config` SET  `value` = '$seo_keywords' WHERE code='shop_keywords'");
-	mysql_query("UPDATE `{$dbPrefix}shop_config` SET  `value` = 'default' WHERE code='template'");
-	mysql_query("UPDATE `{$dbPrefix}shop_config` SET  `value` = '".time()."' WHERE code='install_date'");
+	mysqli_query($conn, "UPDATE `{$dbPrefix}shop_config` SET  `value` = '$site_name' WHERE code='shop_name'");
+	mysqli_query($conn, "UPDATE `{$dbPrefix}shop_config` SET  `value` = '$site_name' WHERE code='shop_title' ");
+	mysqli_query($conn, "UPDATE `{$dbPrefix}shop_config` SET  `value` = '$seo_description' WHERE code='shop_desc'");
+	mysqli_query($conn, "UPDATE `{$dbPrefix}shop_config` SET  `value` = '$seo_keywords' WHERE code='shop_keywords'");
+	mysqli_query($conn, "UPDATE `{$dbPrefix}shop_config` SET  `value` = 'default' WHERE code='template'");
+	mysqli_query($conn, "UPDATE `{$dbPrefix}shop_config` SET  `value` = '".time()."' WHERE code='install_date'");
 }
 
 //插入微信菜单
@@ -36,10 +36,10 @@ $query = "INSERT INTO `{$dbPrefix}wechat_menu` (`id`, `wechat_id`, `pid`, `name`
 (12, 1, 3, '订单查询', 'click', 'ddcx', '', 2, 1),
 (13, 1, 3, '积分查询', 'click', 'jfcx', '', 3, 1),
 (14, 1, 3, '签到送积分', 'click', 'sign', '', 4, 1)";
-mysql_query($query);
+mysqli_query($conn, $query);
 
 //读取配置文件，并替换真实配置数据
-$strConfig = file_get_contents(ROOT_PATH . $config['dbSetFile']);
+$strConfig = file_get_contents(INSTALL_PATH . $config['dbSetFile']);
 $strConfig = str_replace('#DB_HOST#', $dbHost, $strConfig);
 $strConfig = str_replace('#DB_NAME#', $dbName, $strConfig);
 $strConfig = str_replace('#DB_USER#', $dbUser, $strConfig);
@@ -49,21 +49,17 @@ $strConfig = str_replace('#DB_PREFIX#', $dbPrefix, $strConfig);
 @file_put_contents(ROOT_PATH . $config['dbConfig'], $strConfig);
 
 if($independent){
-	
 	//插入管理员
 	$verify = rand(1000, 9999); //生成随机认证码
 	$time = time();
 	$ip = get_client_ip();
 	$password = md5(md5($password).$verify);
 	$email = trim($_POST['manager_email']);
-	$query = "INSERT INTO `{$dbPrefix}admin_user` (user_name, password, ec_salt, email, add_time, last_ip, action_list,nav_list,agency_id) VALUES ('{$username}', '{$password}', '{$verify}', '{$email}', '{$time}', '{$ip}', 'all','',0)";
-	file_put_contents("tt.txt",$query);
-	if(mysql_query($query)){
-	
+	$query = "INSERT INTO `{$dbPrefix}admin_user` (user_name, password, ec_salt, email, add_time, last_ip, action_list) VALUES ('{$username}', '{$password}', '{$verify}', '{$email}', '{$time}', '{$ip}', 'all')";
+	if(mysqli_query($conn, $query)){
 		return array('status'=>2,'info'=>'成功添加管理员<br />成功写入配置文件<br>安装完成...');
 	}
 }else{
-
 	return array('status'=>2,'info'=>'成功写入配置文件<br>安装完成...');
 }
 return array('status'=>0,'info'=>'安装失败...');

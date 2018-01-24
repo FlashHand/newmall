@@ -1,4 +1,4 @@
-<?php exit;?>a:3:{s:8:"template";a:4:{i:0;s:49:"/ecmoban/www/ectouch_wfx/themes/default/index.dwt";i:1;s:67:"/ecmoban/www/ectouch_wfx/themes/default/library/new_page_header.lbi";i:2;s:62:"/ecmoban/www/ectouch_wfx/themes/default/library/new_search.lbi";i:3;s:67:"/ecmoban/www/ectouch_wfx/themes/default/library/new_page_footer.lbi";}s:7:"expires";i:1487391282;s:8:"maketime";i:1487387682;}<!DOCTYPE html>
+<?php exit;?>a:3:{s:8:"template";a:4:{i:0;s:75:"E:/WWWROOT/PHPSTUDY-HTDOCS/ecframeworks/ecplug0007/themes/default/index.dwt";i:1;s:93:"E:/WWWROOT/PHPSTUDY-HTDOCS/ecframeworks/ecplug0007/themes/default/library/new_page_header.lbi";i:2;s:88:"E:/WWWROOT/PHPSTUDY-HTDOCS/ecframeworks/ecplug0007/themes/default/library/new_search.lbi";i:3;s:93:"E:/WWWROOT/PHPSTUDY-HTDOCS/ecframeworks/ecplug0007/themes/default/library/new_page_footer.lbi";}s:7:"expires";i:1504156397;s:8:"maketime";i:1504152797;}<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -6,13 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta charset="utf-8">
-<title>ECTouch微分销</title>
-<link rel="stylesheet" href="/ectouch_wfx/themes/default/statics/css/ectouch.css" />
-<script type="text/javascript" >var tpl = '/ectouch_wfx/themes/default';</script>
+<title>ECTouch微商城</title>
+<link rel="stylesheet" href="/themes/default/statics/css/ectouch.css" />
+<script type="text/javascript" >var tpl = '/themes/default';</script>
 </head>
 <body style="max-width:640px;">
-<div id="loading"><img src="/ectouch_wfx/themes/default/statics/img/loading.gif" /></div>
-<script type="text/javascript" >var tpl = '/ectouch_wfx/themes/default';</script><div class="con m-b7 new-maxbox">
+<div id="loading"><img src="/themes/default/statics/img/loading.gif" /></div>
+<script type="text/javascript" >var tpl = '/themes/default';</script><div class="con m-b7 new-maxbox">
 	<header class="header-max-box">
 				<div class="ect-header-banner dis-box">
 			<div class="box-flex">
@@ -32,11 +32,11 @@
 	<div class="index-banner swiper-container box position-rel banner-first">
 				<div class="index-nav-box">
 			<ul class="dis-box">
-				<li class="index-left-box"><a href="/ectouch_wfx/index.php?m=default&c=category&a=top_all&u=0"><i class="iconfont icon-caidan color-whie"></i></a></li>
+				<li class="index-left-box"><a href="/index.php?m=default&c=category&a=top_all&u=0"><i class="iconfont icon-caidan color-whie"></i></a></li>
 				<li class="box-flex n-input-index-box">
 					<div class="index-search-box j-search-input" id="j-input-focus"><i class="iconfont icon-sousuo"></i>请输入您搜索的关键词!</div>
 				</li>
-				<li class="index-right-box"><a href="/ectouch_wfx/index.php?m=default&c=user&a=msg_list&u=0"><i class="iconfont icon-xiaoxi1 color-whie n-xiaoxi-size"></i></a></li>
+				<li class="index-right-box"><a href="/index.php?m=default&c=user&a=msg_list&u=0"><i class="iconfont icon-xiaoxi1 color-whie n-xiaoxi-size"></i></a></li>
 			</ul>
 		</div>
 		<div class="swiper-wrapper">
@@ -66,8 +66,8 @@
 				<a class="index-menu-text" href="index.php?c=activity" >促销活动</a>
 			</li>
 						<li class="fl">
-				<a href="javascript:openSearch();" ><img src="themes/default/images/nav/nav_6.png" /></a>
-				<a class="index-menu-text" href="javascript:openSearch();" >热门搜索</a>
+				<a href="index.php?c=exchange" ><img src="themes/default/images/nav/nav_6.png" /></a>
+				<a class="index-menu-text" href="index.php?c=exchange" >积分商城</a>
 			</li>
 						<li class="fl">
 				<a href="index.php?c=brand" ><img src="themes/default/images/nav/nav_2.png" /></a>
@@ -98,7 +98,7 @@
 		</div>
 	</div>
 	<ul class="index-cate-box m-top06">
-		554fcae493e564ee0dc75bdf2ebf94caads|a:3:{s:4:"name";s:3:"ads";s:2:"id";s:3:"256";s:3:"num";s:1:"4";}554fcae493e564ee0dc75bdf2ebf94ca	</ul>
+		554fcae493e564ee0dc75bdf2ebf94caads|a:3:{s:4:"name";s:3:"ads";s:2:"id";s:3:"256";s:3:"num";s:2:"10";}554fcae493e564ee0dc75bdf2ebf94ca	</ul>
 	
 	<div class="text-c n-cate-box">
 		<p class="index-title"><i class="iconfont icon-cainixihuan is-cainixihuan"></i>猜你喜欢</p>
@@ -113,19 +113,19 @@
 	<div class="n-footer-box">
 		<ul class="n-footer-minbox">
 			<li>
-				<a href="http://m.ecmoban.com/index.php?m=touch&amp;c=index&amp;a=download">
+				<a href="#">
 					<div class="n-footer-img-box"><i class="iconfont icon-qunfengshangjiazhushouapperweimafuben is-ban-fize"></i></div>
 					<p class="footer-tit1">客户端</p>
 				</a>
 			</li>
 			<li>
-				<a href="index.html">
+				<a href="#">
 					<div class="n-footer-img-box"><i class="iconfont icon-shoujiyanzheng is-ban-fize active"></i></div>
 					<p class="footer-tit">触屏版</p>
 				</a>
 			</li>
 			<li>
-				<a href="http://www.ecmoban.com/?pc">
+				<a href="#">
 					<div class="n-footer-img-box"><i class="iconfont icon-pc is-ban-fize jian-top-2"></i></div>
 					<p class="footer-tit1">电脑版</p>
 				</a>
@@ -137,27 +137,27 @@
 	<i class="iconfont icon-dingbu"></i>
 </div>
 <footer class="footer-nav dis-box">
-				<a href="/ectouch_wfx/index.php?m=default&c=index&a=index&u=0" class="box-flex nav-list active">
+				<a href="/index.php?m=default&c=index&a=index&u=0" class="box-flex nav-list active">
 					<i class="nav-box i-home"></i><span>首页</span>
 				</a>
-				<a href="/ectouch_wfx/index.php?m=default&c=category&a=top_all&u=0" class="box-flex nav-list">
+				<a href="/index.php?m=default&c=category&a=top_all&u=0" class="box-flex nav-list">
 					<i class="nav-box i-cate"></i><span>分类</span>
 				</a>
 				
-				<a href="/ectouch_wfx/index.php?m=default&c=store&a=check_store&u=0" class="box-flex nav-list ">
+				<a href="/index.php?m=default&c=store&a=check_store&u=0" class="box-flex nav-list ">
 					<i class="nav-box i-shop"></i><span>店铺</span>
 				</a>
 				
-				<a href="/ectouch_wfx/index.php?m=default&c=flow&a=cart&u=0" class="box-flex position-rel nav-list">
+				<a href="/index.php?m=default&c=flow&a=cart&u=0" class="box-flex position-rel nav-list">
 					<i class="nav-box i-flow"></i><span>购物车</span>
 				</a>
-				<a href="/ectouch_wfx/index.php?m=default&c=user&a=index&u=0" class="box-flex nav-list">
+				<a href="/index.php?m=default&c=user&a=index&u=0" class="box-flex nav-list">
 					<i class="nav-box i-user"></i><span>我的</span>
 				</a>
 		</footer>			
 <div class="search-div ts-3">
 	<section class="search">
-		<form action="/ectouch_wfx/index.php?m=default&c=category&a=index&u=0" method="post">
+		<form action="/index.php?m=default&c=category&a=index&u=0" method="post">
 		<div class="text-all dis-box j-text-all">
 			<a class="a-icon-back j-close-search" href="javascript:history.go(-1)"><i class="iconfont icon-jiantou is-left-font"></i></a>
 			<div class="box-flex input-text">
@@ -176,8 +176,6 @@
 			<label class="fl">热门搜索</label>
 		</p>
 		<ul class="hot-search a-text-more">
-						<li class="w-3"><a href="/ectouch_wfx/index.php?m=default&c=category&a=index&keywords=%E7%BE%8E%E5%9B%BD&u=0"><span>美国</span></a></li>
-						<li class="w-3"><a href="/ectouch_wfx/index.php?m=default&c=category&a=index&keywords=%E6%96%B0%E7%94%9F%E5%A9%B4%E5%84%BF&u=0"><span>新生婴儿</span></a></li>
 					</ul>
 		<p class="hos-search">
 			<label class="fl">最近搜索</label>
@@ -207,17 +205,17 @@ function clearHistroy(){
 	setCookie('ECS[keywords]', '', -1);
 	document.getElementById("search_histroy").style.visibility = "hidden";
 }
-</script><script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/swiper.min.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/ectouch.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/data/assets/js/jquery.json.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/jquery-ui-1.10.1.custom.min.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/jquery.ui.touch-punch.min.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/jquery.scrollUp.min.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/themes/default/statics/js/jquery.lazyload.min.js"></script>
-<script type="text/javascript" src="/ectouch_wfx/data/assets/js/common.js"></script><script type="text/javascript" src="__PUBLIC__/js/jquery.more.js"></script>
+</script><script type="text/javascript" src="/themes/default/statics/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/themes/default/statics/js/swiper.min.js"></script>
+<script type="text/javascript" src="/themes/default/statics/js/ectouch.js"></script>
+<script type="text/javascript" src="/data/assets/js/jquery.json.js"></script>
+<script type="text/javascript" src="/themes/default/statics/js/jquery-ui-1.10.1.custom.min.js"></script>
+<script type="text/javascript" src="/themes/default/statics/js/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="/themes/default/statics/js/jquery.scrollUp.min.js"></script>
+<script type="text/javascript" src="/themes/default/statics/js/jquery.lazyload.min.js"></script>
+<script type="text/javascript" src="/data/assets/js/common.js"></script><script type="text/javascript" src="__PUBLIC__/js/jquery.more.js"></script>
 <script type="text/javascript">
-	get_asynclist("/ectouch_wfx/index.php?m=default&c=index&a=ajax_goods&type=best&u=0", '__TPL__/images/loader.gif');
+	get_asynclist("/index.php?m=default&c=index&a=ajax_goods&type=best&u=0", '__TPL__/images/loader.gif');
 </script>
 <script type="text/javascript ">
 	$(function($) {		
