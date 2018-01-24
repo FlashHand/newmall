@@ -36,7 +36,7 @@ $data = array (
   'integral_percent' => '1',
   'sn_prefix' => 'ECS',
   'comment_check' => '1',
-  'no_picture' => '/data/attached/images/no_picture.gif',
+  'no_picture' => '/ectwfx/data/attached/images/no_picture.gif',
   'stats_code' => '',
   'cache_time' => 3600,
   'register_points' => '0',
@@ -148,7 +148,7 @@ $data = array (
   'integrate_config' => '',
   'hash_code' => '31693422540744c0a6b6da635b7a5a93',
   'template' => 'default',
-  'install_date' => '1505461207',
+  'install_date' => '1491563209',
   'ecs_version' => 'v2.7.3',
   'sms_user_name' => '',
   'sms_password' => '',
@@ -187,6 +187,6 @@ $data = array (
   'new_number' => 3,
   'hot_number' => 3,
   'promote_number' => 3,
-  'shop_url' => 'http:',
+  'shop_url' => 'http://localhost:9096',
 );
 ?>

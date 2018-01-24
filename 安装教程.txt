@@ -1,1 +1,0 @@
-把根目录底下的data.sql导入数据库，然后找到data/database.php，将数据库信息修改为你自己的即可

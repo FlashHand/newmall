@@ -121,7 +121,7 @@ echo $this->_echash . $k['name'] . '|' . serialize($k) . $this->_echash;
 				<a href="<?php echo url('index/index');?>" class="box-flex nav-list active">
 					<i class="nav-box i-home"></i><span>首页</span>
 				</a>
-				<a href="<?php echo url('category/top_all');?>" class="box-flex nav-list">
+				<a href="/ectwfx/?m=default&amp;c=category&amp;a=top_all&amp;u=0" class="box-flex nav-list">
 					<i class="nav-box i-cate"></i><span>分类</span>
 				</a>
 				
