@@ -64,6 +64,7 @@ class mysql
     {
         if ($pconnect)
         {
+            $err_level = error_reporting(0);  
             if (!($this->link_id = @mysqli_connect($dbhost, $dbuser, $dbpw)))
             {
                 if (!$quiet)
@@ -73,6 +74,7 @@ class mysql
 
                 return false;
             }
+            error_reporting($err_level); 
         }
         else
         {
